@@ -1,20 +1,28 @@
 const fs = require("fs");
+const CONFIG_PATH = "./config.json";
 
 const load = () =>
 {
-	let contents = fs.readFileSync("./config.json", "utf8");
-	let json;
+	if (fs.existsSync(CONFIG_PATH))
+	{
+		let contents = fs.readFileSync(CONFIG_PATH, "utf8");
+		let config;
 
-	try
+		try
+		{
+			config = JSON.parse(contents);
+		} catch (e)
+		{
+			console.log("There was an error in your config.json");
+			throw e;
+		}
+
+		return config;
+
+	} else
 	{
-		json = JSON.parse(contents);
-	} catch (e)
-	{
-		console.log("There was an error in your config.json");
-		throw e;
+		throw new Error(`Config file was not found in path ${CONFIG_PATH}`);
 	}
-
-	return json;
 }
 
 module.exports = load();

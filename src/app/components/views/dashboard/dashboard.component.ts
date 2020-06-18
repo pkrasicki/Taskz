@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
 		{
 			if (res.error == true)
 			{
-				console.error("error", res.message);
+				console.error(res.message);
 
 				if (res.data && res.data.authenticated == false)
 					this.router.navigate(["/login"]);

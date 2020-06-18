@@ -26,7 +26,7 @@ export class BoardListItemComponent implements OnInit {
 			{
 				if (res.error == true)
 				{
-					console.error("error", res.message);
+					console.error(res.message);
 				} else if (res.success == true)
 				{
 					this.boardDelete.emit(res.data.id);
