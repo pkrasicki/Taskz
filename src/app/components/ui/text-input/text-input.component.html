@@ -1,0 +1,1 @@
+<input type="text" class="ui-text-input" #inputElement placeholder="{{ placeholder }}" [(ngModel)]="inputValue" (ngModelChange)="inputValueChange.emit(inputValue)" (focus)="focus.emit($event)" (blur)="blur.emit($event)"/>

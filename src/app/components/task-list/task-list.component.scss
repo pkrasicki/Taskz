@@ -1,0 +1,49 @@
+@import "../../../vars.scss";
+
+.task-list
+{
+	.header
+	{
+		display: grid;
+		grid-template-columns: 92% 8%;
+		overflow-wrap: break-word;
+		
+		h4
+		{
+			margin-top: 0px;
+			margin-bottom: 5px;
+			overflow-wrap: break-word;
+		}
+
+		.btn-list-settings
+		{
+			text-align: right;
+		}
+	}
+
+	.btn-add
+	{
+		margin-top: 5px;
+	}
+
+	.buttons
+	{
+		ui-button
+		{
+			width: 100px;
+			margin-top: 5px;
+			margin-right: 10px;
+		}
+	}
+
+	ui-context-menu ui-button
+	{
+		padding: 5px;
+		text-align: left;
+
+		&:hover
+		{
+			background: rgba(255, 255, 255, 0.08);
+		}
+	}
+}

@@ -1,0 +1,299 @@
+@import "vars.scss";
+
+*
+{
+	box-sizing: border-box;
+}
+
+body
+{
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgba(255, 255, 255, 0.85);
+	background-color: $background;
+	font-size: 18px;
+	overflow: hidden;
+}
+
+ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+a
+{
+	text-decoration: none;
+	color: $link;
+	outline: none;
+
+	&:active
+	{
+		outline: none;
+	}
+}
+
+.no-select
+{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.invisible
+{
+	visibility: hidden !important;
+}
+
+.hidden
+{
+	display: none !important;
+}
+
+.text-primary
+{
+	color: $primary;
+}
+
+.text-center
+{
+	text-align: center;
+}
+
+.btn
+{
+	@extend .no-select;
+	display: inline-block;
+	color: rgba(255, 255, 255, 0.9);
+	background-color: $button;
+	padding: 5px;
+	border: solid 1px transparent;
+	border-radius: 5px;
+	cursor: pointer;
+	outline: none;
+	text-align: center;
+
+	&:hover
+	{
+		color: rgba(255, 255, 255, 1);
+		background-color: $button-light;
+		outline: none;
+	}
+	
+	&:active
+	{
+		background-color: $button-dark;
+		outline: none;
+	}
+
+	&:not(:active)
+	{
+		transition: background-color 0.5s ease;
+	}
+}
+
+.btn-primary
+{
+	@extend .btn;
+	background-color: $primary;
+
+	&:hover
+	{
+		background-color: $primary-light;
+	}
+
+	&:active
+	{
+		background-color: $primary-dark;
+	}
+}
+
+.btn-secondary
+{
+	@extend .btn;
+	background-color: $secondary;
+
+	&:hover
+	{
+		background-color: $secondary-light;
+	}
+
+	&:active
+	{
+		background-color: $secondary-dark;
+	}
+}
+
+.btn-success
+{
+	@extend .btn;
+	background-color: $success;
+
+	&:hover
+	{
+		background-color: $success-light;
+	}
+
+	&:active
+	{
+		background-color: $success-dark;
+	}
+}
+
+.btn-warning
+{
+	@extend .btn;
+	background-color: $warning;
+
+	&:hover
+	{
+		background-color: lighten($warning, 5);
+	}
+
+	&:active
+	{
+		background-color: darken($warning, 5);
+	}
+}
+
+.btn-danger
+{
+	@extend .btn;
+	background-color: $danger;
+
+	&:hover
+	{
+		background-color: $danger-light;
+	}
+
+	&:active
+	{
+		background-color: $danger-dark;
+	}
+}
+
+.btn-add
+{
+	@extend .btn;
+	width: 100%;
+	color: rgba(255, 255, 255, 0.7);
+
+	&:hover
+	{
+		color: rgba(255, 255, 255, 0.9);
+	}
+}
+
+.btn-alt
+{
+	@extend .btn;
+	background-color: transparent;
+	border: solid 1px rgba(255, 255, 255, 0.6);
+
+	&:hover
+	{
+		border-color: transparent;
+	}
+}
+
+.btn-nav
+{
+	@extend .btn;
+	background-color: transparent;
+	color: rgba(255, 255, 255, 0.8);
+	padding: 3px 10px;
+
+	&:hover
+	{
+		background-color: lighten($nav, 7);
+	}
+}
+
+.add-icon
+{
+	position: relative;
+	top: 2px;
+}
+
+.btn-list-settings
+{
+	@extend .btn;
+	padding: 0;
+	background: transparent;
+	color: rgba(255, 255, 255, 0.8);
+
+	&:hover
+	{
+		background: transparent;
+	}
+
+	&:active
+	{
+		color: rgba(255, 255, 255, 0.7);
+	}
+}
+
+.spinner
+{
+	animation: spin 2s linear infinite;
+}
+
+.modal
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	padding: 7%;
+	background-color: rgba(0, 0, 0, 0.35);
+}
+
+@keyframes spin
+{
+	from {transform: rotate(0deg);}
+	to {transform: rotate(360deg);}
+}
+
+@font-face
+{
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-weight: 400;
+	src: url("../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.eot"); /* For IE6-8 */
+	src: local('Material Icons'),
+		local('MaterialIcons-Regular'),
+		url(../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff2) format('woff2'),
+		url(../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff) format('woff'),
+		url(../node_modules/material-design-icons/iconfont/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons
+{
+	font-family: 'Material Icons';
+	font-weight: normal;
+	font-style: normal;
+	// font-size: 24px;  /* Preferred icon size */
+	display: inline-block;
+	line-height: 1;
+	text-transform: none;
+	letter-spacing: normal;
+	word-wrap: normal;
+	white-space: nowrap;
+	direction: ltr;
+
+	/* Support for all WebKit browsers. */
+	-webkit-font-smoothing: antialiased;
+	/* Support for Safari and Chrome. */
+	text-rendering: optimizeLegibility;
+
+	/* Support for Firefox. */
+	-moz-osx-font-smoothing: grayscale;
+
+	/* Support for IE. */
+	font-feature-settings: 'liga';
+}

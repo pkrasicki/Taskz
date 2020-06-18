@@ -1,0 +1,38 @@
+<div class="modal" #outsideArea *ngIf="isVisible">
+	<div class="container">
+		<div class="menu">
+			<ui-button class="close-btn" (click)="hide()"><i class="material-icons">cancel</i></ui-button>
+		</div>
+
+		<div class="content">
+			<h4 class="task-content" title="click to edit" *ngIf="!isEditingTaskTitle" (click)="showTaskTitleInput()">
+				<pre>{{ taskContent }}</pre> <i class="material-icons add-icon">edit</i>
+			</h4>
+			<ui-textarea #taskTitleInput [(inputValue)]="taskContent" *ngIf="isEditingTaskTitle" (blur)="taskTitleInputBlurred($event)"></ui-textarea>
+
+			<div class="buttons">
+				<ui-button class="btn"><i class="material-icons add-icon">person_add</i> Assign</ui-button>
+				<ui-button class="btn"><i class="material-icons add-icon">label</i> Edit label</ui-button>
+				<ui-button class="btn"><i class="material-icons add-icon">date_range</i> Due date</ui-button>
+				<ui-button class="btn-danger" (click)="deleteTask()"><i class="material-icons add-icon">delete</i> Delete</ui-button>
+			</div>
+
+			<div class="comments">
+				<h4><i class="material-icons">forum</i> Comments</h4>
+				<ul class="comments-list" *ngIf="currentTask != null">
+					<li *ngFor="let comment of currentTask.comments">
+						<span class="comment-author"><a href="#">{{ comment.author }} </a></span>
+						<span class="comment-date">{{ comment.date | date: "dd.MM.yyyy"}}</span>
+						<p class="comment-content">{{ comment.content }}</p>
+					</li>
+				</ul>
+
+				<p class="no-comments" *ngIf="currentTask != null && currentTask.comments.length == 0">There aren't any comments yet.</p>
+				<!-- <ui-button class="btn add-icon"><i class="material-icons">edit</i> Comment</ui-button> -->
+				<ui-text-input [placeholder]="'Write a message...'"></ui-text-input>
+				<!-- <ui-button class="btn-success"><i class="material-icons add-icon">send</i> Send</ui-button> -->
+			</div>
+
+		</div>
+	</div>
+</div>

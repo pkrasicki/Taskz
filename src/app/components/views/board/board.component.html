@@ -1,0 +1,23 @@
+<div class="board" (dragover)="listDraggedOver($event)" (drop)="listDropped($event)">
+	<navbar [board]="board"></navbar>
+
+	<div class="content">
+		<ul *ngIf="board != null">
+			<li *ngFor="let taskList of board.taskLists">
+				<task-list [taskList]="taskList" [parentBoard]="this"></task-list>
+			</li>
+			<li>
+				<ui-button class="btn-add" (click)="showEdit()" [ngClass]="listEdit.isVisible ? 'hidden' : ''"><i class="material-icons add-icon">create</i> New List</ui-button>
+				<ui-toggable-edit #listEdit [placeholder]="'Name for your list'" [(val)]="newListTitle" (acceptClick)="createTaskListFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
+			</li>
+		</ul>
+
+		<div class="loading-indicator" *ngIf="board == null">
+			<div>
+				<i class="material-icons spinner">sync</i>
+			</div>
+		</div>
+	</div>
+
+	<task-edit-modal #modal></task-edit-modal>
+</div>

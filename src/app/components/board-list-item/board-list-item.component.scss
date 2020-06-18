@@ -1,0 +1,66 @@
+@import "../../../vars.scss";
+
+.board-list-item
+{
+	.board
+	{
+		display: block;
+		height: 130px;
+		width: 200px;
+		text-align: center;
+		color: inherit;
+		background-color: lighten($background, 12);
+		border-radius: 5px;
+		padding: 10px;
+		outline: none;
+
+		&:hover
+		{
+			background-color: lighten($background, 15);
+		}
+
+		&:hover .title
+		{
+			color: rgba(255, 255, 255, 0.8);
+		}
+
+		.title
+		{
+			margin-top: 0;
+			margin-bottom: 0;
+			color: rgba(255, 255, 255, 0.7);
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+
+		.icon
+		{
+			transform: scaleX(-1);
+			font-size: 64px;
+			margin-top: 0;
+			margin-bottom: 0;
+			color: $secondary;
+			align-self: center;
+		}
+	}
+
+	.board:active
+	{
+		outline: none;
+	}
+
+	.delete-btn
+	{
+		float: right;
+		position: relative;
+		top: -25px;
+		right: 5px;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.delete-btn:hover
+	{
+		color: rgba(255, 255, 255, 0.8);
+	}
+}

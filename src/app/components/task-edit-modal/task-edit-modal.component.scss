@@ -1,0 +1,142 @@
+@import "../../../vars.scss";
+
+.modal
+{
+	.close-btn
+	{
+		font-size: 20px;
+		float: right;
+		color: rgba(255, 255, 255, 0.7);
+
+		&:hover
+		{
+			color: rgba(255, 255, 255, 0.85);
+		}
+
+		&:active
+		{
+			color: rgba(255, 255, 255, 0.6);
+		}
+	}
+
+	.menu
+	{
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.container
+	{
+		height: 100%;
+		width: 100%;
+		background-color: $background;
+		border: solid 1px lighten($background, 10);
+		border-radius: 5px;
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.content
+	{
+		text-align: center;
+		overflow-y: auto;
+		height: 100%;
+
+		.task-content
+		{
+			margin-top: 0;
+			margin-bottom: 0;
+			overflow-wrap: break-word;
+			text-align: left;
+			cursor: pointer;
+			border-radius: 5px;
+			padding: 5px;
+
+			pre
+			{
+				font: inherit;
+				font-size: inherit;
+			}
+
+			&:hover
+			{
+				color: rgba(255, 255, 255, 0.95);
+			}
+		}
+
+		.buttons
+		{
+			margin-top: 20px;
+		}
+
+		ui-button
+		{
+			margin-right: 20px;
+			padding: 5px 10px;
+		}
+
+		.grid
+		{
+			display: grid;
+			grid-template-columns: 30% 30%;
+			grid-gap: 10px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			justify-content: center;
+		}
+
+		.grid label
+		{
+			align-self: center;
+		}
+
+		.comments
+		{
+			margin-top: 80px;
+			text-align: left;
+
+			ui-text-input
+			{
+				display: inline-block;			
+			}
+
+			ui-button
+			{
+				width: auto;
+			}
+		}
+
+		.comments-list
+		{
+			display: flex;
+			flex-direction: column;
+		}
+
+		.comments-list li
+		{
+			display: inline-block;
+			margin-bottom: 20px;
+			align-self: flex-start;
+		}
+
+		.comment-date
+		{
+			color: rgba(255, 255, 255, 0.6);
+		}
+
+		.comment-content
+		{
+			margin-top: 5px;
+			padding: 15px;
+			background: $card;
+			border-radius: 5px;
+		}
+
+		.no-comments
+		{
+			margin-top: 0;
+			color: rgba(255, 255, 255, 0.7);
+		}
+	}
+}

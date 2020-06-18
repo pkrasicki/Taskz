@@ -1,0 +1,15 @@
+{
+	"database":
+	{
+		"host": "",
+		"user": "",
+		"password": "",
+		"dbName": ""
+	},
+
+	"security":
+	{
+		"sessionSecret": "",
+		"saltSize": 12
+	}
+}

@@ -1,0 +1,40 @@
+@import "../../../../vars.scss";
+
+.register
+{
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	text-align: center;
+	justify-content: center;
+	padding-top: 10vh;
+
+	.message
+	{
+		padding: 10px;
+		background-color: $danger-dark;
+		border-radius: 5px;
+		width: 50%;
+		margin: 0 auto;
+	}
+
+	form
+	{
+		margin-top: 20px;
+		margin-bottom: 20px;
+
+		input
+		{
+			display: block;
+			margin: 0 auto;
+			margin-bottom: 10px;
+			font-size: inherit;
+		}
+	
+		input[type=submit]
+		{
+			padding: 10px 20px;
+			margin-top: 20px;
+		}
+	}
+}

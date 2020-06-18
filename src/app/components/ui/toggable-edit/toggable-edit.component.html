@@ -1,0 +1,5 @@
+<div class="buttons" #toggableEdit [ngClass]="isVisible ? '' : 'hidden'">
+	<ui-text-input #input [placeholder]="placeholder" [(inputValue)]="val" (inputValueChange)="valChange.emit(val)" (focus)="focus.emit($event)" (blur)="blur.emit($event)"></ui-text-input>
+	<ui-button class="btn-success" (click)="acceptClick.emit($event)">Add</ui-button>
+	<ui-button class="btn-alt" (click)="cancelClick.emit($event)">Cancel</ui-button>
+</div>

@@ -1,0 +1,82 @@
+@import "../../../../vars.scss";
+
+.welcome
+{
+	.container
+	{
+		padding: 10px;
+	}
+
+	.header
+	{
+		text-align: center;
+
+		.title
+		{
+			color: $primary;
+			font-size: 48px;
+			margin-top: 25px;
+			margin-bottom: 0px;
+		}
+	
+		.title2
+		{
+			margin-top: 0px;
+		}
+	}
+
+	.showcase
+	{
+		margin-top: 50px;
+		text-align: center;
+
+		img
+		{
+			width: 90%;
+			margin: 0 auto;
+			border-radius: 5px;
+			background: $card;
+		}
+
+		.buttons
+		{
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			margin-top: 10px;
+		}
+
+		.btn-primary, .btn-secondary
+		{
+			padding: 10px 20px;
+		}
+		
+		.btn-primary
+		{
+			margin-right: 20px;
+		}
+	}
+
+	.features
+	{
+		padding: 50px;
+		margin-top: 80px;
+
+		ul
+		{
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 50px;
+		}
+
+		.title
+		{
+			margin-bottom: 5px;
+		}
+
+		.description
+		{
+			margin-top: 0;
+		}
+	}
+}

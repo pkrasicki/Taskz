@@ -1,0 +1,16 @@
+@import "../../../../vars.scss";
+
+.ui-text-input
+{
+	width: 100%;
+	background: $button;
+	color: rgba(255, 255, 255, 0.9);
+	padding: 5px;
+	border-radius: 5px;
+	border: solid 1px transparent;
+
+	&:focus
+	{
+		border: solid 1px rgba(255, 255, 255, 0.7);
+	}
+}

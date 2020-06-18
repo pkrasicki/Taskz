@@ -1,0 +1,36 @@
+@import "../../../vars.scss";
+
+.task, ::ng-deep .task
+{
+	padding: 7px;
+	margin-bottom: 7px;
+	cursor: pointer;
+	color: rgba(255, 255, 255, 0.9);
+	background: $card;
+	border: solid 1px $card-dark;
+	border-radius: 5px;
+	overflow-wrap: break-word;
+
+	&:hover
+	{
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.btn-edit
+	{
+		float: right;
+		color: inherit;
+	}
+}
+
+.task-hidden
+{
+	transition: opacity 0.01s linear;
+	border-color: rgba(255, 255, 255, 0.3) !important;
+	opacity: 0;
+}
+
+.task-dragover
+{
+	border-color: rgba(255, 255, 255, 0.1)
+}

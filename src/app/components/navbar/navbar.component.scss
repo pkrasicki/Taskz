@@ -1,0 +1,45 @@
+@import "../../../vars.scss";
+
+.navbar
+{
+	text-align: center;
+	background-color: $nav;
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 5px;
+
+	.btn-success
+	{
+		padding: 3px 10px;
+	}
+
+	.board-title
+	{
+		flex: 1;
+
+		h3
+		{
+			margin: 0;
+		}
+	}
+
+	.user
+	{
+		flex: 1;
+		text-align: right;
+
+		ui-context-menu
+		{
+			background: $nav !important;
+		}
+	}
+
+	.boards
+	{
+		flex: 1;
+		text-align: left;
+	}
+}

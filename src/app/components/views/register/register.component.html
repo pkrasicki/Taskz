@@ -1,0 +1,17 @@
+<div class="register">
+	<h1>Register</h1>
+	<div class="message" *ngIf="messages.length > 0">
+		<ul>
+			<li *ngFor="let message of messages">{{ message }}</li>
+		</ul>
+	</div>
+
+	<form (submit)="formSubmitted($event)">
+		<input type="text" name="name" [(ngModel)]="username" placeholder="username" required/>
+		<input type="password" name="password" [(ngModel)]="password" placeholder="password" required/>
+		<input type="password" name="password2" [(ngModel)]="password2" placeholder="confirm password" required/>
+		<input type="submit" class="btn-primary" value="Register"/>
+	</form>
+
+	<p>Already a user? <a [routerLink]="'/login'">Log in</a></p>
+</div>

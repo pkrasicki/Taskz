@@ -1,0 +1,33 @@
+<div class="dashboard">
+	<navbar (createBoardClick)="createBoardClicked($event)"></navbar>
+
+	<div class="container">
+		<h2 class="text-center">Your boards</h2>
+		<ul class="board-list">
+			<li *ngFor="let board of boards" #boardItem>
+				<board-list-item [board]="board" [username]="username" (boardDelete)="boardDeleted($event)"></board-list-item>
+			</li>
+		</ul>
+	</div>
+
+	<ui-context-menu class="create-board-modal" #createBoardMenu>
+		<section>
+			<ui-text-input [placeholder]="'Name for your board'" [(inputValue)]="newBoardName"></ui-text-input>
+		</section>
+
+		<section>
+			<input type="radio" name="board-type" value="0" [(ngModel)]="newBoardType" checked/> private
+			<input type="radio" name="board-type" value="1" [(ngModel)]="newBoardType"/> public
+		</section>
+
+		<section>
+			<p class="color-menu" (click)="toggleColorMenu()" [ngClass]="colorMenuExpanded ? 'hidden' : ''">▸ Color</p>
+			<p class="color-menu" (click)="toggleColorMenu()" [ngClass]="!colorMenuExpanded ? 'hidden' : ''">▾ Color</p>
+			<div class="color-menu-content" [ngClass]="!colorMenuExpanded ? 'hidden' : ''">
+				<input type="color" name="board-color" [(ngModel)]="newBoardColor"/>
+			</div>
+		</section>
+
+		<ui-button class="btn btn-success create-btn" (click)="createBoard()"><i class="material-icons add-icon">create</i> Create</ui-button>
+	</ui-context-menu>
+</div>

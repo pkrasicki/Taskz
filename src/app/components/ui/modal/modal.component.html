@@ -1,0 +1,11 @@
+<div class="modal" #outsideArea *ngIf="isVisible">
+	<div class="container">
+		<div class="menu">
+			<ui-button class="close-btn" (click)="hide()"><i class="material-icons">cancel</i></ui-button>
+		</div>
+
+		<div class="content">
+			<ng-content></ng-content>
+		</div>
+	</div>
+</div>

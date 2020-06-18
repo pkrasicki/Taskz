@@ -1,0 +1,8 @@
+<div class="board-list-item">
+	<a class="board" routerLink="/{{username}}/{{board.title}}" title="{{board.title}}">
+		<h4 class="title">{{ board.title }}</h4>
+		<p class="icon" [ngStyle]="{'color': board.color == null ? 'default' : board.color}"><i class="material-icons">tab</i></p>
+	</a>
+
+	<a href="#" class="delete-btn" (click)="deleteClicked($event)"><i class="material-icons">delete</i></a>
+</div>

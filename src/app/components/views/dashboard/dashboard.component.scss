@@ -1,0 +1,99 @@
+@import "../../../../vars.scss";
+
+.dashboard
+{
+	background: $background;
+	height: 100%;
+	overflow: auto;
+
+	.container
+	{
+		padding: 10px;
+	}
+
+	.board-list
+	{
+		padding: 5px;
+
+		li
+		{
+			display: inline-block;
+			margin-right: 25px;
+			margin-bottom: 25px;
+		}
+	}
+
+	.create-board-modal
+	{
+		section
+		{
+			margin: 5px;
+		}
+
+		input[type=color]
+		{
+			border: none;
+			outline: none;
+			padding: 0;
+			height: 25px;
+			width: 100%;
+			cursor: pointer;
+			position: relative;
+			top: 5px;
+		}
+
+		input[type=radio]
+		{
+			position: relative;
+			top: 2px;
+		}
+
+		.create-btn
+		{
+			padding: 5px 10px;
+			border-radius: 5px;
+			margin: 5px;
+			width: 95% !important;
+		}
+
+		::ng-deep
+		{
+		 	ui-text-input input
+		 	{
+				background-color: rgba(255, 255, 255, 0.1);
+				margin-bottom: 5px;
+		 	}
+		}
+
+		.color-menu
+		{
+			margin-bottom: 0px;
+			cursor: pointer;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+		
+		.color-menu-content
+		{
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	}
+}
+
+@media (max-width: 720px)
+{
+	.dashboard
+	{
+		.board-list
+		{
+			li
+			{
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+		}
+	}
+}

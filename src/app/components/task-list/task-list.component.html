@@ -1,0 +1,22 @@
+<div class="task-list" draggable="true" #listElement (dragover)="taskDraggedOver($event)" (drop)="taskDropped($event)" (dragstart)="dragged($event)" (dragend)="dragEnded($event)">
+	<div class="header">
+		<h4 *ngIf="!isEditingListTitle">{{ taskList.title }}</h4>
+		<ui-text-input #listTitleInput [(inputValue)]="newListTitle" *ngIf="isEditingListTitle" (blur)="listTitleEditBlurred($event)" (focus)="listTitleEditFocused($event)"></ui-text-input>
+		<ui-button class="btn-list-settings" (click)="settingsBtnClicked($event)"><i class="material-icons">more_horiz</i></ui-button>
+	</div>
+
+	<ul>
+		<li *ngFor="let task of taskList.tasks">
+			<task [task]="task" [parentTaskList]="this"></task>
+		</li>
+	</ul>
+
+	<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New task</ui-button>
+	<ui-toggable-edit #taskEdit [placeholder]="'Name for your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()" (focus)="taskInputFocused($event)" (blur)="taskInputBlurred($event)"></ui-toggable-edit>
+
+	<ui-context-menu #listMenu>
+		<li><ui-button class="btn-alt" (click)="duplicate()">Duplicate</ui-button></li>
+		<li><ui-button class="btn-alt" (click)="showRenameInput()">Rename</ui-button></li>
+		<li><ui-button class="btn-alt" (click)="delete()">Delete</ui-button></li>
+	</ui-context-menu>
+</div>
