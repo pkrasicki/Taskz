@@ -36,6 +36,12 @@ a
 	}
 }
 
+input, textarea
+{
+	font-family: inherit;
+	font-size: inherit;
+}
+
 .no-select
 {
 	-moz-user-select: none;
