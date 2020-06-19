@@ -15,6 +15,7 @@ export class BoardComponent implements OnInit {
 	@ViewChild("modal", {static: false}) modal;
 	@ViewChild("listEdit", {static: false}) listEdit;
 	@ViewChildren(TaskListComponent) taskListComponents;
+	isLoading: boolean = true;
 	board: Board;
 	newTaskContent: string = "";
 	newListTitle: string = "";
@@ -28,14 +29,9 @@ export class BoardComponent implements OnInit {
 		this.taskService.setBoardOwner(username);
 		this.taskService.setBoardName(boardName);
 
-		this.taskService.getBoard().subscribe(res =>
+		this.taskService.getBoard().subscribe({
+		next: (res) =>
 		{
-			if (res.error == true)
-			{
-				console.error(res.message);
-				return;
-			}
-
 			let taskLists = res.data.taskLists.map(list =>
 			{
 				let tasks = list.tasks.map(task => new Task(task.content, task.order, task.uuid));
@@ -45,7 +41,20 @@ export class BoardComponent implements OnInit {
 
 			this.board = new Board(res.data.ownerUsername, res.data.title, res.data.type, res.data.color, taskLists);
 			this.board.taskLists.sort((a, b) => a.order - b.order);
-		});
+			this.isLoading = false;
+		},
+
+		error: (err) =>
+		{
+			this.isLoading = false;
+			if (err.error)
+			{
+				console.error(err.error.message);
+			} else
+			{
+				console.error(err);
+			}
+		}});
 	}
 
 	createTaskList(title: string, order?: number, id?: string, tasks?: Task[])

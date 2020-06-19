@@ -11,7 +11,8 @@ Free and open source task management app.
 
 ## Build
 Install remaining dependencies:
-```npm install```
+
+`npm install`
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build. Use `--watch` flag if you want frontend to rebuild on changes (useful for development).
 

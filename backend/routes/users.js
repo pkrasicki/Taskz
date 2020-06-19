@@ -9,10 +9,10 @@ const ErrorResponse = require("../models/error-response");
 const config = require("../config");
 const verify = require("../verify/verify");
 
-function noPermissionResponse()
+function noPermissionResponse(res)
 {
 	res.status(401);
-	res.json(new ErrorResponse("you don't have permission to edit this board"));
+	res.json(new ErrorResponse("You don't have permission to edit this board"));
 }
 
 router.post("/login", passport.authenticate("local", {failWithError: true}), (req, res, next) =>
@@ -100,9 +100,13 @@ router.post("/register", (req, res) =>
 router.get("/user", (req, res) =>
 {
 	if (req.isAuthenticated())
+	{
 		res.json(new SuccessResponse({authenticated: true}));
-	else
+	} else
+	{
+		res.status(401);
 		res.json(new ErrorResponse("Not authenticated", {authenticated: false}));
+	}
 });
 
 router.get("/logout", (req, res) =>
@@ -149,17 +153,22 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 		board.ownerUsername = username;
 
 		if (board.type == 1) // is public board
+		{
 			res.json(new SuccessResponse(board));
-		else if (!isAuthenticated)
-			res.json(new ErrorResponse("not authenticated", {authenticated: false}));
-		else
+
+		} else if (!isAuthenticated)
+		{
+			res.status(401);
+			res.json(new ErrorResponse("Not authenticated", {authenticated: false}));
+
+		} else
 		{
 			let user = new User(req.user.Name, req.user.UserId);
 			let hasAccess = await user.hasAccess(boardId);
 			if (hasAccess)
 				res.json(new SuccessResponse(board));
 			else
-				noPermissionResponse();
+				noPermissionResponse(res);
 		}
 	}
 });
@@ -271,7 +280,7 @@ router.post("/:username/boards/:boardName/taskLists", requireAuthentication, asy
 				}
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
@@ -305,7 +314,7 @@ router.put("/:username/boards/:boardName/taskLists/:id", requireAuthentication, 
 					res.json(new ErrorResponse("task list couldn't be updated"));
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
@@ -336,7 +345,7 @@ router.delete("/:username/boards/:boardName/taskLists/:id", requireAuthenticatio
 					res.json(new ErrorResponse("task list couldn't be deleted"));
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
@@ -377,7 +386,7 @@ router.post("/:username/boards/:boardName/taskLists/:id", requireAuthentication,
 				}
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
@@ -411,7 +420,7 @@ router.put("/:username/boards/:boardName/tasks/:id", requireAuthentication, asyn
 					res.json(new ErrorResponse("task couldn't be updated"));
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
@@ -442,7 +451,7 @@ router.delete("/:username/boards/:boardName/tasks/:id", requireAuthentication, a
 					res.json(new ErrorResponse("task couldn't be deleted"));
 			} else
 			{
-				noPermissionResponse();
+				noPermissionResponse(res);
 			}
 		}
 	}
