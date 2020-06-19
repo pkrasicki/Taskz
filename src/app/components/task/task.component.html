@@ -1,3 +1,3 @@
 <div class="task" draggable="true" #taskElement (click)="parentTaskList.parentBoard.modal.showEdit(this.task, this.parentTaskList.taskList)" (dragstart)="dragged($event)" (dragend)="dragEnded($event)" [ngClass]="isDragged ? 'task-hidden' : ''">
-	<span>{{ task.content }}</span>
+	<pre>{{ task.content }}</pre>
 </div>

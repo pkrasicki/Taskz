@@ -11,6 +11,15 @@
 	border-radius: 5px;
 	overflow-wrap: break-word;
 
+	pre
+	{
+		font: inherit;
+		font-size: inherit;
+		padding: 0px;
+		white-space: pre-wrap;
+		margin: 0;
+	}
+
 	&:hover
 	{
 		border-color: rgba(255, 255, 255, 0.1);
