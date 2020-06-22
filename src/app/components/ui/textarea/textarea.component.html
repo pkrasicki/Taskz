@@ -1,1 +1,1 @@
-<textarea class="ui-textarea" rows="4" #inputElement placeholder="{{ placeholder }}" [(ngModel)]="inputValue" (ngModelChange)="inputValueChange.emit(inputValue)" (focus)="focus.emit($event)" (blur)="blur.emit($event)"></textarea>
+<textarea class="ui-textarea" #inputElement rows="{{ rows }}" placeholder="{{ placeholder }}" [(ngModel)]="inputValue" (ngModelChange)="inputValueChange.emit(inputValue)" (focus)="focus.emit($event)" (blur)="blur.emit($event)" (keydown)="keyDown($event)" (input)="autoHeight()"></textarea>

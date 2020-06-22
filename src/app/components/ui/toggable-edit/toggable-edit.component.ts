@@ -7,9 +7,10 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, HostListener
 })
 export class ToggableEditComponent implements OnInit {
 	@ViewChild("toggableEdit", {static: true}) element;
-	@ViewChild("input", {static: true}) input;
-	@Input() placeholder;
-	@Input() val;
+	@ViewChild("input", {static: false}) input;
+	@Input() placeholder: string;
+	@Input() val: string;
+	@Input() useTextarea: boolean = false;
 	@Output() valChange: EventEmitter<string> = new EventEmitter<string>();
 	@Output() focus: EventEmitter<any> = new EventEmitter();
 	@Output() blur: EventEmitter<any> = new EventEmitter();
@@ -26,9 +27,14 @@ export class ToggableEditComponent implements OnInit {
 	show()
 	{
 		this.isVisible = true;
-		setTimeout(() => {this.isOnScreen = true}, 50);
+		setTimeout(() =>
+		{
+			this.isOnScreen = true;
+			if (this.useTextarea)
+				this.input.autoHeight();
+		}, 50);
 	}
-	
+
 	hide()
 	{
 		this.isVisible = false;

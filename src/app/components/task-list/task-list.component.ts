@@ -67,7 +67,13 @@ export class TaskListComponent implements OnInit {
 			this.parentBoard.newTaskContent = "";
 		}
 
-		setTimeout(() => this.taskEdit.input.element.nativeElement.focus(), 50);
+		setTimeout(() =>
+		{
+			if (this.taskEdit.useTextarea)
+				this.taskEdit.input.autoHeight();
+
+			this.taskEdit.input.element.nativeElement.focus();
+		}, 50);
 	}
 
 	taskDraggedOver(e)

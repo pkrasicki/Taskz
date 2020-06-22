@@ -12,7 +12,7 @@
 	</ul>
 
 	<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New task</ui-button>
-	<ui-toggable-edit #taskEdit [placeholder]="'Name for your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()" (focus)="taskInputFocused($event)" (blur)="taskInputBlurred($event)"></ui-toggable-edit>
+	<ui-toggable-edit #taskEdit [useTextarea]="true" [placeholder]="'Your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()" (focus)="taskInputFocused($event)" (blur)="taskInputBlurred($event)"></ui-toggable-edit>
 
 	<ui-context-menu #listMenu>
 		<li><ui-button class="btn-alt" (click)="duplicate()">Duplicate</ui-button></li>

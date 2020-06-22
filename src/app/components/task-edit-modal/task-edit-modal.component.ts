@@ -89,6 +89,7 @@ export class TaskEditModalComponent extends ModalComponent implements OnInit{
 		setTimeout(() =>
 		{
 			this.taskTitleInput.element.nativeElement.focus();
+			this.taskTitleInput.autoHeight();
 		}, 50);
 	}
 

@@ -156,7 +156,7 @@ export class BoardComponent implements OnInit {
 	{
 		if (e.key == "Escape")
 			this.hideAllInputs();
-		else if (e.key == "Enter")
+		else if (e.key == "Enter" && !e.shiftKey)
 			this.submitActiveInput();
 	}
 
