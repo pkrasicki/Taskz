@@ -6,7 +6,7 @@
 			<li *ngFor="let taskList of board.taskLists">
 				<task-list [taskList]="taskList" [parentBoard]="this"></task-list>
 			</li>
-			<li>
+			<li class="task-list">
 				<ui-button class="btn-add" (click)="showEdit()" [ngClass]="listEdit.isVisible ? 'hidden' : ''"><i class="material-icons add-icon">create</i> New List</ui-button>
 				<ui-toggable-edit #listEdit [placeholder]="'Name for your list'" [(val)]="newListTitle" (acceptClick)="createTaskListFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
 			</li>

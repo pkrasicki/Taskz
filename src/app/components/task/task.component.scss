@@ -34,12 +34,15 @@
 
 .task-hidden
 {
-	transition: opacity 0.01s linear;
-	border-color: rgba(255, 255, 255, 0.3) !important;
-	opacity: 0;
+	display: none;
 }
 
-.task-dragover
+.task-clone
+{
+	border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.task-dragged
 {
 	border-color: rgba(255, 255, 255, 0.1)
 }

@@ -11,7 +11,7 @@ const verify = require("../verify/verify");
 
 function noPermissionResponse(res)
 {
-	res.status(401);
+	res.status(403);
 	res.json(new ErrorResponse("You don't have permission to edit this board"));
 }
 

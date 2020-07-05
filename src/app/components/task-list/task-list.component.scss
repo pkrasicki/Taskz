@@ -1,13 +1,26 @@
 @import "../../../vars.scss";
 
-.task-list
+.task-list, ::ng-deep .task-list
 {
+	width: 300px;
+	flex-shrink: 0;
+	background: $card;
+	padding: 10px;
+	border-radius: 5px;
+	margin-right: 10px;
+
+	ui-button
+	{
+		margin-top: 5px;
+		margin-right: 10px;
+	}
+
 	.header
 	{
 		display: grid;
 		grid-template-columns: 92% 8%;
 		overflow-wrap: break-word;
-		
+
 		h4
 		{
 			margin-top: 0px;
@@ -45,5 +58,21 @@
 		{
 			background: rgba(255, 255, 255, 0.08);
 		}
+	}
+}
+
+.task-list-hidden
+{
+	transition: opacity 0.01s linear;
+	opacity: 0;
+
+	.btn-add
+	{
+		display: none;
+	}
+
+	ui-toggable-edit
+	{
+		display: none;
 	}
 }

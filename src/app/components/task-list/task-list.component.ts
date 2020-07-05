@@ -19,6 +19,7 @@ export class TaskListComponent implements OnInit {
 	@ViewChildren(TaskComponent) taskComponents;
 	isEditingListTitle: boolean = false;
 	newListTitle: string;
+	isDragged: boolean = false;
 
 	constructor(private taskService: TaskService)
 	{ }
@@ -76,7 +77,7 @@ export class TaskListComponent implements OnInit {
 		}, 50);
 	}
 
-	taskDraggedOver(e)
+	taskDraggedOver(e: DragEvent)
 	{
 		e.preventDefault();
 		e.dataTransfer.dropEffect = "move";
@@ -95,59 +96,68 @@ export class TaskListComponent implements OnInit {
 		if (taskData.type != "task")
 			return;
 
-		let showMovePreview = true;
-		let closest = {order: 0, dist: Infinity, rect: null, elem: null};
-		this.taskComponents._results.forEach((taskComponent) =>
+		let index = -1;
+		let insertBefore = false;
+		let rects = this.taskComponents._results.map(component => component.element.nativeElement.getBoundingClientRect());
+
+		for (let i = 0; i < rects.length; i++)
 		{
-			const oldMovePreview = document.querySelector("#moveTargetDisplay");
-			if (oldMovePreview != null)
-				oldMovePreview.remove();
+			let centerY = rects[i].y + (rects[i].height / 2);
 
-			taskComponent.element.nativeElement.classList.remove("task-dragover");
-			let rect = taskComponent.element.nativeElement.getBoundingClientRect();
-			let dist = Math.abs(e.clientY - rect.y);
-			if (dist < closest.dist)
+			if (e.clientY > centerY)
 			{
-				closest.order = taskComponent.task.order;
-				closest.dist = dist;
-				closest.rect = rect;
-				closest.elem = taskComponent.element.nativeElement;
-			}
-		});
-
-		const oldMovePreview = document.querySelector("#moveTargetDisplay");
-		if (oldMovePreview != null)
-			oldMovePreview.remove();
-
-		if (showMovePreview)
-		{
-			const preview = document.createElement("div");
-			preview.classList.add("task");
-			preview.textContent = "t";
-			preview.style.visibility = "hidden";
-			preview.id = "moveTargetDisplay";
-			const ul = this.element.nativeElement.querySelector("ul");
-
-			if (ul != null)
-			{
-				if (closest.elem == null)
+				if (i + 1 < rects.length) // task is not last on the list
 				{
-					ul.appendChild(preview);
+					let nextCenterY = rects[i+1].y + (rects[i+1].height / 2);
+					if (e.clientY < nextCenterY)
+					{
+						index = i;
+						insertBefore = false;
+						taskData.task.order = this.taskComponents._results[index + 1].task.order;
+						break;
+					}
 				} else
 				{
-					if (closest.rect.y + (closest.rect.height / 2) < e.clientY)
-					{
-						ul.insertBefore(preview, closest.elem.parentNode.parentNode.nextSibling);
-					} else
-					{
-						ul.insertBefore(preview, closest.elem.parentNode.parentNode);
-					}
+					index = i;
+					insertBefore = false;
+					taskData.task.order = this.taskComponents._results[index].task.order + 1;
+					break;
 				}
+			} else if (e.clientY < centerY)
+			{
+				index = 0;
+				insertBefore = true;
+				taskData.task.order = this.taskComponents._results[index].task.order;
+				break;
 			}
+		}
+
+		const oldTaskPreview = document.querySelector("#taskPreview");
+		if (oldTaskPreview != null)
+			oldTaskPreview.remove();
+
+		const preview = document.createElement("div");
+		preview.classList.add("task");
+		preview.textContent = "t";
+		preview.style.visibility = "hidden";
+		preview.id = "taskPreview";
+		const ul = this.element.nativeElement.querySelector("ul");
+
+		if (ul != null && this.taskComponents._results[index] != null)
+		{
+			if (insertBefore)
+			{
+				ul.insertBefore(preview, this.taskComponents._results[index].element.nativeElement.parentNode.parentNode);
+			} else
+			{
+				ul.insertBefore(preview, this.taskComponents._results[index].element.nativeElement.parentNode.parentNode.nextSibling);
+			}
+
+			this.taskService.draggedTask = taskData.task;
 		}
 	}
 
-	taskDropped(e)
+	taskDropped(e: DragEvent)
 	{
 		e.preventDefault();
 		const taskJson = e.dataTransfer.getData("application/json");
@@ -164,66 +174,40 @@ export class TaskListComponent implements OnInit {
 		if (taskData.type != "task")
 			return;
 
-		const oldMovePreview = document.querySelector("#moveTargetDisplay");
-		if (oldMovePreview != null)
-			oldMovePreview.remove();
-
-		const task = taskData.task;
-		const originalTaskList = this.parentBoard.board.taskLists.filter(list => list.id == taskData.originalTaskList.id)[0];
-		let closest = {order: 0, dist: Infinity, rect: null};
-		let isTheSameList = false;
-
-		if (taskData.originalTaskList.id == this.taskList.id)
-			isTheSameList = true;
-
-		this.taskComponents._results.forEach((taskComponent) =>
-		{
-			let rect = taskComponent.element.nativeElement.getBoundingClientRect();
-			let dist = Math.abs(e.clientY - (rect.y + (rect.height / 2)));
-			if (dist < closest.dist)
-			{
-				closest.order = taskComponent.task.order;
-				closest.dist = dist;
-				closest.rect = rect;
-			}
-		});
-
-		if (isTheSameList && closest.order == task.order)	// nothing was changed
-			return;
-
-		// find the right order for new task
-		if (closest.rect == null)
-		{
-			closest.order = 0;
-		} else if (closest.rect.y + (closest.rect.height / 2) < e.clientY)
-		{
-			closest.order++;
-		}
-
-		task.order = closest.order;
-
-		this.taskService.createTask(this.taskList.id, task).subscribe(res =>
+		this.taskService.createTask(this.taskList.id, this.taskService.draggedTask).subscribe(res =>
 		{
 			if (res.success == true)
 			{
 				this.taskList.getTasks().forEach(t =>
 				{
-					if (t.order >= task.order)
+					if (t.order >= this.taskService.draggedTask.order)
 						t.order++;
 				});
 
 				this.taskList.add(new Task(res.data.content, res.data.order, res.data.id));
 				this.taskList.sort();
 			}
-		});
 
-		this.taskService.deleteTask(task).subscribe(res =>
-		{
-			if (res.success == true)
-				originalTaskList.remove(taskData.originalIndex);
-			else if (res.error = true)
-				console.error(res.message);
+			this.taskService.deleteTask(this.taskService.draggedTask).subscribe(delRes =>
+			{
+				if (delRes.success == true)
+				{
+					let listIndex = this.parentBoard.board.taskLists.findIndex(l => l.id == taskData.originalTaskList.id);
+					let taskIndex = this.parentBoard.board.taskLists[listIndex].getTasks().findIndex(t => t.id == taskData.task.id);
+					this.parentBoard.board.taskLists[listIndex].remove(taskIndex);
+				} else if (delRes.error == true)
+				{
+					console.error(delRes.message);
+				}
+			});
 		});
+	}
+
+	dragLeave(e: DragEvent)
+	{
+		const oldMovePreview = this.element.nativeElement.querySelector("#taskPreview");
+		if (oldMovePreview != null)
+			oldMovePreview.remove();
 	}
 
 	// when parent element is draggable, user can't select text inside of input element with mouse
@@ -240,15 +224,18 @@ export class TaskListComponent implements OnInit {
 		this.element.nativeElement.draggable = true;
 	}
 
-	dragged(e)
+	dragStarted(e: DragEvent)
 	{
 		e.dataTransfer.dropEffect = "move";
 		const data = {type: "taskList", taskList: this.taskList};
 		e.dataTransfer.setData("application/json", JSON.stringify(data));
+		this.isDragged = true;
 	}
 
-	dragEnded(e)
-	{ }
+	dragEnded(e: DragEvent)
+	{
+		this.isDragged = false;
+	}
 
 	settingsBtnClicked(e)
 	{

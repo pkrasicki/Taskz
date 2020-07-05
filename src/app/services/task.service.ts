@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class TaskService {
 	boardName: string;
 	boardOwner: string;
+	draggedTask: Task;
 	constructor(private http: HttpClient) { }
 
 	setBoardOwner(owner: string)

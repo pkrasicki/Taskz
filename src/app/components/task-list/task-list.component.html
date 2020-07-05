@@ -1,4 +1,4 @@
-<div class="task-list" draggable="true" #listElement (dragover)="taskDraggedOver($event)" (drop)="taskDropped($event)" (dragstart)="dragged($event)" (dragend)="dragEnded($event)">
+<div class="task-list" draggable="true" #listElement (dragover)="taskDraggedOver($event)" (drop)="taskDropped($event)" (dragstart)="dragStarted($event)" (dragend)="dragEnded($event)" (dragleave)="dragLeave($event)" [ngClass]="isDragged ? 'task-list-hidden' : ''">
 	<div class="header">
 		<h4 *ngIf="!isEditingListTitle">{{ taskList.title }}</h4>
 		<ui-text-input #listTitleInput [(inputValue)]="newListTitle" *ngIf="isEditingListTitle" (blur)="listTitleEditBlurred($event)" (focus)="listTitleEditFocused($event)"></ui-text-input>
