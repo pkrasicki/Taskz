@@ -3,6 +3,7 @@ import { TaskList } from "src/app/models/task-list";
 import { Task } from "src/app/models/task";
 import { TaskService } from "src/app/services/task.service";
 import { TaskComponent } from '../task/task.component';
+import { CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
 	selector: 'task-list',
@@ -19,7 +20,6 @@ export class TaskListComponent implements OnInit {
 	@ViewChildren(TaskComponent) taskComponents;
 	isEditingListTitle: boolean = false;
 	newListTitle: string;
-	isDragged: boolean = false;
 
 	constructor(private taskService: TaskService)
 	{ }
@@ -77,139 +77,6 @@ export class TaskListComponent implements OnInit {
 		}, 50);
 	}
 
-	taskDraggedOver(e: DragEvent)
-	{
-		e.preventDefault();
-		e.dataTransfer.dropEffect = "move";
-
-		const taskJson = e.dataTransfer.getData("application/json");
-		let taskData;
-
-		try
-		{
-			taskData = JSON.parse(taskJson);
-		} catch
-		{
-			return; // return when json parsing fails
-		}
-
-		if (taskData.type != "task")
-			return;
-
-		let index = -1;
-		let insertBefore = false;
-		let rects = this.taskComponents._results.map(component => component.element.nativeElement.getBoundingClientRect());
-
-		for (let i = 0; i < rects.length; i++)
-		{
-			let centerY = rects[i].y + (rects[i].height / 2);
-
-			if (e.clientY > centerY)
-			{
-				if (i + 1 < rects.length) // task is not last on the list
-				{
-					let nextCenterY = rects[i+1].y + (rects[i+1].height / 2);
-					if (e.clientY < nextCenterY)
-					{
-						index = i;
-						insertBefore = false;
-						taskData.task.order = this.taskComponents._results[index + 1].task.order;
-						break;
-					}
-				} else
-				{
-					index = i;
-					insertBefore = false;
-					taskData.task.order = this.taskComponents._results[index].task.order + 1;
-					break;
-				}
-			} else if (e.clientY < centerY)
-			{
-				index = 0;
-				insertBefore = true;
-				taskData.task.order = this.taskComponents._results[index].task.order;
-				break;
-			}
-		}
-
-		const oldTaskPreview = document.querySelector("#taskPreview");
-		if (oldTaskPreview != null)
-			oldTaskPreview.remove();
-
-		const preview = document.createElement("div");
-		preview.classList.add("task");
-		preview.textContent = "t";
-		preview.style.visibility = "hidden";
-		preview.id = "taskPreview";
-		const ul = this.element.nativeElement.querySelector("ul");
-
-		if (ul != null && this.taskComponents._results[index] != null)
-		{
-			if (insertBefore)
-			{
-				ul.insertBefore(preview, this.taskComponents._results[index].element.nativeElement.parentNode.parentNode);
-			} else
-			{
-				ul.insertBefore(preview, this.taskComponents._results[index].element.nativeElement.parentNode.parentNode.nextSibling);
-			}
-
-			this.taskService.draggedTask = taskData.task;
-		}
-	}
-
-	taskDropped(e: DragEvent)
-	{
-		e.preventDefault();
-		const taskJson = e.dataTransfer.getData("application/json");
-		let taskData;
-
-		try
-		{
-			taskData = JSON.parse(taskJson);
-		} catch
-		{
-			return; // return when json parsing fails
-		}
-
-		if (taskData.type != "task")
-			return;
-
-		this.taskService.createTask(this.taskList.id, this.taskService.draggedTask).subscribe(res =>
-		{
-			if (res.success == true)
-			{
-				this.taskList.getTasks().forEach(t =>
-				{
-					if (t.order >= this.taskService.draggedTask.order)
-						t.order++;
-				});
-
-				this.taskList.add(new Task(res.data.content, res.data.order, res.data.id));
-				this.taskList.sort();
-			}
-
-			this.taskService.deleteTask(this.taskService.draggedTask).subscribe(delRes =>
-			{
-				if (delRes.success == true)
-				{
-					let listIndex = this.parentBoard.board.taskLists.findIndex(l => l.id == taskData.originalTaskList.id);
-					let taskIndex = this.parentBoard.board.taskLists[listIndex].getTasks().findIndex(t => t.id == taskData.task.id);
-					this.parentBoard.board.taskLists[listIndex].remove(taskIndex);
-				} else if (delRes.error == true)
-				{
-					console.error(delRes.message);
-				}
-			});
-		});
-	}
-
-	dragLeave(e: DragEvent)
-	{
-		const oldMovePreview = this.element.nativeElement.querySelector("#taskPreview");
-		if (oldMovePreview != null)
-			oldMovePreview.remove();
-	}
-
 	// when parent element is draggable, user can't select text inside of input element with mouse
 	// to work around this we are temporarily disabling dragging when taskInput is focused
 	// (https://stackoverflow.com/questions/27149192/no-possibility-to-select-text-inside-input-when-parent-is-draggable)
@@ -222,19 +89,6 @@ export class TaskListComponent implements OnInit {
 	taskInputBlurred(e)
 	{
 		this.element.nativeElement.draggable = true;
-	}
-
-	dragStarted(e: DragEvent)
-	{
-		e.dataTransfer.dropEffect = "move";
-		const data = {type: "taskList", taskList: this.taskList};
-		e.dataTransfer.setData("application/json", JSON.stringify(data));
-		this.isDragged = true;
-	}
-
-	dragEnded(e: DragEvent)
-	{
-		this.isDragged = false;
 	}
 
 	settingsBtnClicked(e)
@@ -318,6 +172,89 @@ export class TaskListComponent implements OnInit {
 		} else if (e.key == "Enter" && this.isEditingListTitle)
 		{
 			this.listTitleInput.element.nativeElement.blur();
+		}
+	}
+
+	taskDropped(e: CdkDragDrop<Task[]>)
+	{
+		if (e.previousContainer != e.container)
+			transferArrayItem(e.previousContainer.data, e.container.data, e.previousIndex, e.currentIndex);
+		else
+			moveItemInArray(this.taskList.getTasks(), e.previousIndex, e.currentIndex);
+
+		let droppedTask = this.taskList.getTasks()[e.currentIndex];
+		let previousOrder = droppedTask.order;
+		let targetOrder;
+
+		if (e.currentIndex != 0)
+			targetOrder = this.taskList.getTasks()[e.currentIndex - 1].order + 1;
+		else
+			targetOrder = 0;
+
+		if (targetOrder == previousOrder && e.previousContainer == e.container) // nothing was changed
+			return;
+
+		if (e.previousContainer != e.container)
+		{
+			let task = new Task(droppedTask.content, targetOrder);
+
+			this.taskService.createTask(this.taskList.id, task).subscribe(res =>
+			{
+				if (res.success == true)
+				{
+					this.taskList.getTasks().forEach(t =>
+					{
+						if (t.order >= targetOrder)
+							t.order++;
+					});
+
+					let oldTask = new Task(droppedTask.content, droppedTask.order, droppedTask.id);
+					droppedTask.id = res.data.id;
+					droppedTask.order = res.data.order;
+					this.taskList.sort();
+
+					this.taskService.deleteTask(oldTask).subscribe(delRes =>
+					{
+						if (delRes.error == true)
+							console.error(delRes.message);
+					});
+
+				} else if (res.error == true)
+				{
+					console.error(res.message);
+				}
+			});
+
+		} else
+		{
+			let task = new Task(droppedTask.content, targetOrder, droppedTask.id);
+			this.taskService.updateTask(task).subscribe(res =>
+			{
+				if (res.success == true)
+				{
+					this.taskList.getTasks().forEach(t =>
+					{
+						if (t.order >= targetOrder)
+							t.order++;
+					});
+					droppedTask.order = res.data.order;
+					this.taskList.sort();
+
+				} else if (res.error == true) // revert changes
+				{
+					console.error(res.message);
+					moveItemInArray(this.taskList.getTasks(), e.currentIndex, e.previousIndex);
+					droppedTask = this.taskList.getTasks()[e.currentIndex];
+					droppedTask.order = previousOrder;
+					this.taskList.getTasks().forEach(t =>
+					{
+						if (t.id != droppedTask.id && t.order >= droppedTask.order)
+							t.order--;
+					});
+
+					this.taskList.sort();
+				}
+			});
 		}
 	}
 }

@@ -177,8 +177,8 @@ class User
 	async createTask(taskListId, content, order, dueDate=null)
 	{
 		await db.moveTasksDown(taskListId, order);
-		let taskId = (await db.createTask(taskListId, content, order, dueDate)).insertId;
-		return taskId;
+		let res = await db.createTask(taskListId, content, order, dueDate);
+		return res.insertId;
 	}
 
 	// returns db response with uuid
@@ -190,14 +190,22 @@ class User
 		return res;
 	}
 
-	async updateTask(id, content, order, dueDate=null)
+	async updateTask(uuid, content, order, dueDate=null)
 	{
-		return (await db.updateTask(id, content, order, dueDate)).changedRows;
+		let task = await User.getTask(uuid);
+		if (task == null)
+			return 0;
+
+		if (task.order != order)
+			await db.moveTasksDown(task.taskListId, order);
+
+		return (await db.updateTask(uuid, content, order, dueDate)).changedRows;
 	}
 
 	async deleteTask(id)
 	{
-		return (await db.deleteTask(id)).affectedRows;
+		let res = await db.deleteTask(id);
+		return res.affectedRows;
 	}
 
 	// checks if user can access a board
@@ -243,6 +251,15 @@ class User
 	{
 		let tasks = await db.getTasksByListUuid(taskListUuid);
 		return tasks;
+	}
+
+	static async getTask(uuid)
+	{
+		let res = await db.getTask(uuid);
+		if (res.length > 0)
+			return res[0];
+		else
+			return null;
 	}
 
 	static async getBoardId(username, boardName)

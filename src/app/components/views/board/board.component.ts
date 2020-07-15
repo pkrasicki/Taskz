@@ -159,42 +159,4 @@ export class BoardComponent implements OnInit {
 		else if (e.key == "Enter" && !e.shiftKey)
 			this.submitActiveInput();
 	}
-
-	listDraggedOver(e: DragEvent)
-	{
-		e.preventDefault();
-		e.dataTransfer.dropEffect = "move";
-
-		const json = e.dataTransfer.getData("application/json");
-		let listData;
-
-		try
-		{
-			listData = JSON.parse(json);
-		} catch
-		{
-			return;
-		}
-
-		if (listData.type != "taskList")
-			return;
-	}
-
-	listDropped(e: DragEvent)
-	{
-		e.preventDefault();
-		const json = e.dataTransfer.getData("application/json");
-		let listData;
-
-		try
-		{
-			listData = JSON.parse(json);
-		} catch
-		{
-			return;
-		}
-
-		if (listData.type != "taskList")
-			return;
-	}
 }

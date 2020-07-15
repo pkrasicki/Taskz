@@ -1,5 +1,10 @@
 @import "../../../vars.scss";
 
+::ng-deep *
+{
+	list-style: none;
+}
+
 .task-list, ::ng-deep .task-list
 {
 	width: 300px;
@@ -58,21 +63,5 @@
 		{
 			background: rgba(255, 255, 255, 0.08);
 		}
-	}
-}
-
-.task-list-hidden
-{
-	transition: opacity 0.01s linear;
-	opacity: 0;
-
-	.btn-add
-	{
-		display: none;
-	}
-
-	ui-toggable-edit
-	{
-		display: none;
 	}
 }
