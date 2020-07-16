@@ -45,6 +45,14 @@ input, textarea
 {
 	font-family: inherit;
 	font-size: inherit;
+	outline: none;
+	border: solid 1px transparent;
+	border-radius: 2px;
+}
+
+input:not([type=submit]):focus
+{
+	border-color: $secondary;
 }
 
 .no-select
