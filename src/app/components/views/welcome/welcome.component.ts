@@ -11,11 +11,15 @@ export class WelcomeComponent implements OnInit {
 
 	constructor(private authService: AuthService, private router: Router) { }
 
-	ngOnInit() {
-		this.authService.isAuthenticated().subscribe((isAuthenticated) =>
+	ngOnInit()
+	{
+		this.authService.getUserData().subscribe((res) =>
 		{
-			if (isAuthenticated)
+			if (res.success == true)
 				this.router.navigate(["/boards"]);
+		}, (err) =>
+		{
+			// do nothing
 		});
 	}
 }

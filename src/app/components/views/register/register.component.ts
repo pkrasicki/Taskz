@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit {
 			return;
 		}
 
-		this.authService.register(this.username, this.password, this.password2).subscribe(res =>
+		this.authService.register(this.username, this.password, this.password2).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
@@ -48,10 +48,11 @@ export class RegisterComponent implements OnInit {
 				this.authService.setJustLoggedOut(false);
 				this.authService.setJustRegistered(true);
 				this.router.navigate(["/login"]);
-			} else
-			{
-				this.messages = res.data;
 			}
+		}, (err) =>
+		{
+			if (err.error.data != null && err.error.data.length > 0)
+				this.messages = err.error.data;
 		});
 	}
 }

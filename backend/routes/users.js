@@ -29,7 +29,10 @@ router.post("/login", passport.authenticate("local", {failWithError: true}), (re
 }, (err, req, res, next) =>
 {
 	if (err.status = 400 || err.status == 401)
+	{
+		res.status(400);
 		res.json(new ErrorResponse("Wrong username or password"));
+	}
 });
 
 router.post("/register", (req, res) =>
@@ -56,6 +59,7 @@ router.post("/register", (req, res) =>
 
 	if (errors.length > 0)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("registration error", errors));
 
 	} else
@@ -91,6 +95,7 @@ router.post("/register", (req, res) =>
 			} else
 			{
 				errors.push("User already exists");
+				res.status(400);
 				res.json(new ErrorResponse("registration error", errors));
 			}
 		});
@@ -121,9 +126,13 @@ router.get("/boards", requireAuthentication, (req, res) =>
 {
 	let userId = req.user.UserId;
 	let user = new User("", userId);
+
 	user.getBoards().then(boards =>
 		res.json(new SuccessResponse(boards))
-	);
+	).catch(e =>
+	{
+		throw e;
+	});
 });
 
 // get board
@@ -134,10 +143,12 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 
 	if (username == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("username is missing"));
 
 	} else if (boardName == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("board name is missing"));
 
 	} else
@@ -146,6 +157,7 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 		if (boardId == -1)
 		{
 			res.status(404);
+			res.json(new ErrorResponse("not found"));
 			return;
 		}
 
@@ -178,6 +190,7 @@ router.post("/boards", requireAuthentication, (req, res) =>
 {
 	if (req.body.title == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -204,7 +217,8 @@ router.post("/boards", requireAuthentication, (req, res) =>
 				res.json(new SuccessResponse(board));
 			} else if (boardInfo.id == -1)
 			{
-				res.status(406);
+				res.status(400);
+				res.json(new ErrorResponse("Couldn't create board"));
 			} else
 			{
 				console.log("Error creating board");
@@ -222,6 +236,7 @@ router.delete("/boards/:id", requireAuthentication, async(req, res) =>
 
 	if (id == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -231,11 +246,16 @@ router.delete("/boards/:id", requireAuthentication, async(req, res) =>
 		{
 			let affectedRows = await user.deleteBoard(id);
 			if (affectedRows > 0)
+			{
 				res.json(new SuccessResponse({id: id}));
-			else
+			} else
+			{
+				res.status(500);
 				res.json(new ErrorResponse("couldn't delete board"));
+			}
 		} else
 		{
+			res.status(403);
 			res.json(new ErrorResponse("you don't own this board"));
 		}
 	}
@@ -249,6 +269,7 @@ router.post("/:username/boards/:boardName/taskLists", requireAuthentication, asy
 
 	if (username == null || boardName == null || title == null || order == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -294,6 +315,7 @@ router.put("/:username/boards/:boardName/taskLists/:id", requireAuthentication, 
 
 	if (username == null || boardName == null || id == null || title == null || order == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -309,9 +331,13 @@ router.put("/:username/boards/:boardName/taskLists/:id", requireAuthentication, 
 			{
 				let changedRows = await user.updateTaskList(id, title, order);
 				if (changedRows > 0)
+				{
 					res.json(new SuccessResponse({id: id, title: title, order: order}));
-				else
+				} else
+				{
+					res.status(500);
 					res.json(new ErrorResponse("task list couldn't be updated"));
+				}
 			} else
 			{
 				noPermissionResponse(res);
@@ -327,6 +353,7 @@ router.delete("/:username/boards/:boardName/taskLists/:id", requireAuthenticatio
 
 	if (username == null || boardName == null || id == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -340,9 +367,13 @@ router.delete("/:username/boards/:boardName/taskLists/:id", requireAuthenticatio
 			{
 				let affectedRows = await user.deleteTaskList(id);
 				if (affectedRows > 0)
+				{
 					res.json(new SuccessResponse({id}));
-				else
+				} else
+				{
+					res.status(500);
 					res.json(new ErrorResponse("task list couldn't be deleted"));
+				}
 			} else
 			{
 				noPermissionResponse(res);
@@ -359,6 +390,7 @@ router.post("/:username/boards/:boardName/taskLists/:id", requireAuthentication,
 
 	if (username == null || boardName == null || id == null || content == null || order == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -400,6 +432,7 @@ router.put("/:username/boards/:boardName/tasks/:id", requireAuthentication, asyn
 
 	if (username == null || boardName == null || id == null || content == null || order == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -415,9 +448,13 @@ router.put("/:username/boards/:boardName/tasks/:id", requireAuthentication, asyn
 			{
 				let changedRows = await user.updateTask(id, content, order, dueDate);
 				if (changedRows > 0)
+				{
 					res.json(new SuccessResponse({id: id, content: content, order: order, dueDate: dueDate}));
-				else
+				} else
+				{
+					res.status(500);
 					res.json(new ErrorResponse("task couldn't be updated"));
+				}
 			} else
 			{
 				noPermissionResponse(res);
@@ -433,6 +470,7 @@ router.delete("/:username/boards/:boardName/tasks/:id", requireAuthentication, a
 
 	if (username == null || boardName == null || id == null)
 	{
+		res.status(400);
 		res.json(new ErrorResponse("missing parameter"));
 	} else
 	{
@@ -446,9 +484,13 @@ router.delete("/:username/boards/:boardName/tasks/:id", requireAuthentication, a
 			{
 				let affectedRows = await user.deleteTask(id);
 				if (affectedRows > 0)
+				{
 					res.json(new SuccessResponse({id: id}));
-				else
+				} else
+				{
+					res.status(500);
 					res.json(new ErrorResponse("task couldn't be deleted"));
+				}
 			} else
 			{
 				noPermissionResponse(res);

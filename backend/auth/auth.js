@@ -7,6 +7,7 @@ module.exports =
 		if (req.isAuthenticated())
 			return next();
 
+		res.status(401);
 		res.json(new ErrorResponse("not authenticated", {authenticated: false}));
 	}
 };

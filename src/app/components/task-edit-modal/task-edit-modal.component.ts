@@ -44,23 +44,23 @@ export class TaskEditModalComponent extends ModalComponent implements OnInit{
 			return;
 
 		let newTask = new Task(this.taskContent, this.currentTask.order, this.currentTask.id);
-		this.taskService.updateTask(newTask).subscribe(res =>
+		this.taskService.updateTask(newTask).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
 				this.currentTask.content = res.data.content;
 				this.currentTask.order = res.data.order;
-			} else if (res.error == true)
-			{
-				console.error(res.message);
-				this.taskContent = this.currentTask.content;
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
+			this.taskContent = this.currentTask.content;
 		});
 	}
 
 	deleteTask()
 	{
-		this.taskService.deleteTask(this.currentTask).subscribe(res =>
+		this.taskService.deleteTask(this.currentTask).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
@@ -68,10 +68,10 @@ export class TaskEditModalComponent extends ModalComponent implements OnInit{
 				let index = tasks.findIndex((task) => task.id == this.currentTask.id);
 				if (index >= 0)
 					this.currentTaskList.remove(index);
-			} else if (res.error == true)
-			{
-				console.error(res.message);
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
 		});
 
 		this.hide();

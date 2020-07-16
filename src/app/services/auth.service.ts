@@ -68,15 +68,9 @@ export class AuthService {
 		this.username = username;
 	}
 
-	isAuthenticated()
+	getUserData()
 	{
-		return new Observable((subscriber) =>
-		{
-			this.http.get<any>("/users/user").subscribe((res) =>
-			{
-				subscriber.next(res.success == true);
-			});
-		});
+		return this.http.get<any>("/users/user");
 	}
 
 	getJustRegistered(): boolean

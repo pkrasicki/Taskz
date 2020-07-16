@@ -22,15 +22,13 @@ export class BoardListItemComponent implements OnInit {
 		let confirmed = window.confirm(`Are you sure you want to delete board '${this.board.title}'? This action can't be undone.`);
 		if (confirmed)
 		{
-			this.taskService.deleteBoard(this.board).subscribe(res =>
+			this.taskService.deleteBoard(this.board).subscribe((res) =>
 			{
-				if (res.error == true)
-				{
-					console.error(res.message);
-				} else if (res.success == true)
-				{
+				if (res.success == true)
 					this.boardDelete.emit(res.data.id);
-				}
+			}, (err) =>
+			{
+				console.error(err.error.message);
 			});
 		}
 	}

@@ -36,13 +36,16 @@ export class TaskListComponent implements OnInit {
 				highestOrder = t.order;
 		});
 		let newTask: Task = new Task(content, highestOrder + 1);
-		this.taskService.createTask(this.taskList.id, newTask).subscribe(res =>
+		this.taskService.createTask(this.taskList.id, newTask).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
 				this.taskList.add(new Task(res.data.content, res.data.order, res.data.id));
 				this.taskList.sort();
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
 		});
 	}
 
@@ -109,17 +112,17 @@ export class TaskListComponent implements OnInit {
 
 	delete()
 	{
-		this.taskService.deleteTaskList(this.taskList).subscribe(res =>
+		this.taskService.deleteTaskList(this.taskList).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
 				let index = this.parentBoard.board.taskLists.findIndex((list) => list.id == this.taskList.id);
 				if (index >= 0)
 					this.parentBoard.board.taskLists.splice(index, 1);
-			} else if (res.error == true)
-			{
-				console.error(res.message);
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
 		});
 
 		this.listMenu.hide();
@@ -145,15 +148,15 @@ export class TaskListComponent implements OnInit {
 			return;
 
 		let newList = new TaskList(this.newListTitle, this.taskList.order, this.taskList.id);
-		this.taskService.updateTaskList(newList).subscribe(res =>
+		this.taskService.updateTaskList(newList).subscribe((res) =>
 		{
 			if (res.success == true)
 			{
 				this.taskList.title = res.data.title;
-			} else if (res.error == true)
-			{
-				console.error(res.message);
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
 		});
 	}
 
@@ -198,7 +201,7 @@ export class TaskListComponent implements OnInit {
 		{
 			let task = new Task(droppedTask.content, targetOrder);
 
-			this.taskService.createTask(this.taskList.id, task).subscribe(res =>
+			this.taskService.createTask(this.taskList.id, task).subscribe((res) =>
 			{
 				if (res.success == true)
 				{
@@ -213,22 +216,22 @@ export class TaskListComponent implements OnInit {
 					droppedTask.order = res.data.order;
 					this.taskList.sort();
 
-					this.taskService.deleteTask(oldTask).subscribe(delRes =>
+					this.taskService.deleteTask(oldTask).subscribe((delRes) =>
+					{},
+					(delErr) =>
 					{
-						if (delRes.error == true)
-							console.error(delRes.message);
+						console.error(delErr.error.message);
 					});
-
-				} else if (res.error == true)
-				{
-					console.error(res.message);
 				}
+			}, (err) =>
+			{
+				console.error(err.error.message);
 			});
 
 		} else
 		{
 			let task = new Task(droppedTask.content, targetOrder, droppedTask.id);
-			this.taskService.updateTask(task).subscribe(res =>
+			this.taskService.updateTask(task).subscribe((res) =>
 			{
 				if (res.success == true)
 				{
@@ -239,21 +242,21 @@ export class TaskListComponent implements OnInit {
 					});
 					droppedTask.order = res.data.order;
 					this.taskList.sort();
-
-				} else if (res.error == true) // revert changes
-				{
-					console.error(res.message);
-					moveItemInArray(this.taskList.getTasks(), e.currentIndex, e.previousIndex);
-					droppedTask = this.taskList.getTasks()[e.currentIndex];
-					droppedTask.order = previousOrder;
-					this.taskList.getTasks().forEach(t =>
-					{
-						if (t.id != droppedTask.id && t.order >= droppedTask.order)
-							t.order--;
-					});
-
-					this.taskList.sort();
 				}
+			}, (err) =>
+			{
+				console.error(err.error.message);
+				// revert changes
+				moveItemInArray(this.taskList.getTasks(), e.currentIndex, e.previousIndex);
+				droppedTask = this.taskList.getTasks()[e.currentIndex];
+				droppedTask.order = previousOrder;
+				this.taskList.getTasks().forEach(t =>
+				{
+					if (t.id != droppedTask.id && t.order >= droppedTask.order)
+						t.order--;
+				});
+
+				this.taskList.sort();
 			});
 		}
 	}

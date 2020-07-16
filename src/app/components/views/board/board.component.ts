@@ -88,13 +88,16 @@ export class BoardComponent implements OnInit {
 			});
 		}
 
-		this.taskService.createTaskList(list).subscribe(res =>
+		this.taskService.createTaskList(list).subscribe((res) =>
 		{
 			if (res.success)
 			{
 				this.board.taskLists.push(new TaskList(res.data.title, res.data.order, res.data.id, res.data.tasks));
 				this.board.taskLists.sort((a, b) => a.order - b.order);
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
 		});
 	}
 

@@ -26,21 +26,21 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit() {
 		this.username = this.authService.getUsername();
-		this.taskService.getBoards().subscribe(res =>
+		this.taskService.getBoards().subscribe((res) =>
 		{
-			if (res.error == true)
-			{
-				console.error(res.message);
-
-				if (res.data && res.data.authenticated == false)
-					this.router.navigate(["/login"]);
-			} else if (res.success == true)
+			if (res.success == true)
 			{
 				res.data.forEach((board) =>
 				{
 					this.boards.push(new Board(board.ownerUsername, board.title, board.type, board.color, [], board.uuid));
 				});
 			}
+		}, (err) =>
+		{
+			console.error(err.error.message);
+
+			if (err.status == 401)
+				this.router.navigate(["/login"]);
 		});
 	}
 
@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
 
 			let board = new Board("", this.newBoardName, parseInt(this.newBoardType), color);
 
-			this.taskService.createBoard(board).subscribe(res =>
+			this.taskService.createBoard(board).subscribe((res) =>
 			{
 				if (res.success == true)
 				{
@@ -64,6 +64,9 @@ export class DashboardComponent implements OnInit {
 					this.newBoardType = "0";
 					this.newBoardColor = DEFAULT_BOARD_COLOR;
 				}
+			}, (err) =>
+			{
+				console.error(err.error.message);
 			});
 		}
 	}
