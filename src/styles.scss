@@ -311,3 +311,35 @@ input:not([type=submit]):focus
 	/* Support for IE. */
 	font-feature-settings: 'liga';
 }
+
+/* Dragula drag and drop */
+
+/* in-flight clone */
+.gu-mirror
+{
+	position: fixed !important;
+	margin: 0 !important;
+	z-index: 9999 !important;
+	pointer-events: none;
+}
+
+/* high-performance display:none; helper */
+.gu-hide
+{
+	left: -9999px !important;
+}
+
+/* added to mirrorContainer (default = body) while dragging */
+.gu-unselectable
+{
+	-webkit-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
+}
+
+/* added to the source element while its mirror is dragged */
+.gu-transit
+{
+	visibility: hidden;
+}

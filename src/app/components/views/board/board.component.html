@@ -2,8 +2,8 @@
 	<navbar [board]="board"></navbar>
 
 	<div class="content">
-		<ul *ngIf="board != null">
-			<li *ngFor="let taskList of board.taskLists">
+		<ul *ngIf="board != null" dragula="LISTS" [(dragulaModel)]="board.taskLists">
+			<li *ngFor="let taskList of board.taskLists" id="{{taskList.id}}">
 				<task-list [taskList]="taskList" [parentBoard]="this"></task-list>
 			</li>
 

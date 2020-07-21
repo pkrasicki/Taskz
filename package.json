@@ -33,6 +33,7 @@
     "express-session": "^1.17.1",
     "material-design-icons": "^3.0.1",
     "mysql": "^2.18.1",
+    "ng2-dragula": "^2.1.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "redis": "^3.0.2",

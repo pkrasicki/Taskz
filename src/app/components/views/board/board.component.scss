@@ -1,5 +1,10 @@
 @import "../../../../vars.scss";
 
+::ng-deep *
+{
+	list-style: none;
+}
+
 .board
 {
 	background: $background;

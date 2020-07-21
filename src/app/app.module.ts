@@ -21,6 +21,7 @@ import { ContextMenuComponent } from './components/ui/context-menu/context-menu.
 import { ModalComponent } from './components/ui/modal/modal.component';
 import { BoardListItemComponent } from './components/board-list-item/board-list-item.component';
 import { TextareaComponent } from './components/ui/textarea/textarea.component';
+import { DragulaModule } from "ng2-dragula";
 
 @NgModule({
 	declarations: [
@@ -46,7 +47,8 @@ import { TextareaComponent } from './components/ui/textarea/textarea.component';
 	  BrowserModule,
 	  HttpClientModule,
 	  AppRoutingModule,
-	  FormsModule
+	  FormsModule,
+	  DragulaModule.forRoot()
 	],
 	providers: [],
 	bootstrap: [AppComponent]

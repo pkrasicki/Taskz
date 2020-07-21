@@ -79,20 +79,6 @@ export class TaskListComponent implements OnInit {
 		}, 50);
 	}
 
-	// when parent element is draggable, user can't select text inside of input element with mouse
-	// to work around this we are temporarily disabling dragging when taskInput is focused
-	// (https://stackoverflow.com/questions/27149192/no-possibility-to-select-text-inside-input-when-parent-is-draggable)
-	taskInputFocused(e)
-	{
-		this.element.nativeElement.draggable = false;
-	}
-
-	// enable dragging again after user stops editing task input
-	taskInputBlurred(e)
-	{
-		this.element.nativeElement.draggable = true;
-	}
-
 	settingsBtnClicked(e)
 	{
 		this.listMenu.toggle(e.target.getBoundingClientRect());
@@ -140,7 +126,6 @@ export class TaskListComponent implements OnInit {
 
 	listTitleEditBlurred()
 	{
-		this.element.nativeElement.draggable = true;
 		this.isEditingListTitle = false;
 
 		if (this.newListTitle == this.taskList.title)
@@ -157,11 +142,6 @@ export class TaskListComponent implements OnInit {
 		{
 			console.error(err.error.message);
 		});
-	}
-
-	listTitleEditFocused(e)
-	{
-		this.element.nativeElement.draggable = false;
 	}
 
 	@HostListener("window:keydown", ["$event"])

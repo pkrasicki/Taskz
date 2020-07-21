@@ -153,9 +153,16 @@ class User
 		return res;
 	}
 
-	async updateTaskList(id, name, order)
+	async updateTaskList(uuid, name, order)
 	{
-		return (await db.updateTaskList(id, name, order)).changedRows;
+		let taskList = await User.getTaskList(uuid);
+		if (taskList == null)
+			return 0;
+
+		if (taskList.order != order)
+			await db.moveTaskListsRight(taskList.boardId, order);
+
+		return (await db.updateTaskList(uuid, name, order)).changedRows;
 	}
 
 	async deleteTaskList(uuid)
@@ -245,6 +252,15 @@ class User
 	{
 		let taskLists = await db.getTaskLists(boardId);
 		return taskLists;
+	}
+
+	static async getTaskList(uuid)
+	{
+		let res = await db.getTaskList(uuid);
+		if (res.length > 0)
+			return res[0];
+		else
+			return null;
 	}
 
 	static async getTasks(taskListUuid)

@@ -480,6 +480,21 @@ module.exports =
 		});
 	},
 
+	getTaskList(uuid)
+	{
+		return new Promise(resolve =>
+		{
+			let queryString = "SELECT Name as title, ListOrder as 'order', Uuid as uuid, BoardId as boardId FROM TaskLists WHERE Uuid = ? LIMIT 1;";
+			con.query(queryString, [uuid], (error, results) =>
+			{
+				if (error)
+					throw error;
+
+				resolve(results);
+			});
+		});
+	},
+
 	findTaskListId(uuid)
 	{
 		return new Promise(resolve =>
@@ -514,7 +529,7 @@ module.exports =
 	{
 		return new Promise(resolve =>
 		{
-			let queryString = "SELECT T.DueDate as dueDate, T.CreatedDate as createdDate, T.Content as content, T.TaskOrder as 'order', T.Uuid, TL.TaskListId as taskListId FROM Tasks as T JOIN TaskLists as TL ON T.Uuid = ? AND T.TaskListId = TL.TaskListId LIMIT 1;";
+			let queryString = "SELECT DueDate as dueDate, CreatedDate as createdDate, Content as content, TaskOrder as 'order', Uuid, TaskListId as taskListId FROM Tasks WHERE Uuid = ? LIMIT 1;";
 			con.query(queryString, [uuid], (error, results) =>
 			{
 				if (error)
