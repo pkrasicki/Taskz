@@ -2,7 +2,7 @@
 	<navbar [board]="board"></navbar>
 
 	<div class="content">
-		<ul *ngIf="board != null" cdkDropListGroup>
+		<ul *ngIf="board != null">
 			<li *ngFor="let taskList of board.taskLists">
 				<task-list [taskList]="taskList" [parentBoard]="this"></task-list>
 			</li>

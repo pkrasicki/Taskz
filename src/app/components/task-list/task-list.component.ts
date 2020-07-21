@@ -3,7 +3,6 @@ import { TaskList } from "src/app/models/task-list";
 import { Task } from "src/app/models/task";
 import { TaskService } from "src/app/services/task.service";
 import { TaskComponent } from '../task/task.component';
-import { CdkDragDrop, transferArrayItem, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
 	selector: 'task-list',
@@ -175,89 +174,6 @@ export class TaskListComponent implements OnInit {
 		} else if (e.key == "Enter" && this.isEditingListTitle)
 		{
 			this.listTitleInput.element.nativeElement.blur();
-		}
-	}
-
-	taskDropped(e: CdkDragDrop<Task[]>)
-	{
-		if (e.previousContainer != e.container)
-			transferArrayItem(e.previousContainer.data, e.container.data, e.previousIndex, e.currentIndex);
-		else
-			moveItemInArray(this.taskList.getTasks(), e.previousIndex, e.currentIndex);
-
-		let droppedTask = this.taskList.getTasks()[e.currentIndex];
-		let previousOrder = droppedTask.order;
-		let targetOrder;
-
-		if (e.currentIndex != 0)
-			targetOrder = this.taskList.getTasks()[e.currentIndex - 1].order + 1;
-		else
-			targetOrder = 0;
-
-		if (targetOrder == previousOrder && e.previousContainer == e.container) // nothing was changed
-			return;
-
-		if (e.previousContainer != e.container)
-		{
-			let task = new Task(droppedTask.content, targetOrder);
-
-			this.taskService.createTask(this.taskList.id, task).subscribe((res) =>
-			{
-				if (res.success == true)
-				{
-					this.taskList.getTasks().forEach(t =>
-					{
-						if (t.order >= targetOrder)
-							t.order++;
-					});
-
-					let oldTask = new Task(droppedTask.content, droppedTask.order, droppedTask.id);
-					droppedTask.id = res.data.id;
-					droppedTask.order = res.data.order;
-					this.taskList.sort();
-
-					this.taskService.deleteTask(oldTask).subscribe((delRes) =>
-					{},
-					(delErr) =>
-					{
-						console.error(delErr.error.message);
-					});
-				}
-			}, (err) =>
-			{
-				console.error(err.error.message);
-			});
-
-		} else
-		{
-			let task = new Task(droppedTask.content, targetOrder, droppedTask.id);
-			this.taskService.updateTask(task).subscribe((res) =>
-			{
-				if (res.success == true)
-				{
-					this.taskList.getTasks().forEach(t =>
-					{
-						if (t.order >= targetOrder)
-							t.order++;
-					});
-					droppedTask.order = res.data.order;
-					this.taskList.sort();
-				}
-			}, (err) =>
-			{
-				console.error(err.error.message);
-				// revert changes
-				moveItemInArray(this.taskList.getTasks(), e.currentIndex, e.previousIndex);
-				droppedTask = this.taskList.getTasks()[e.currentIndex];
-				droppedTask.order = previousOrder;
-				this.taskList.getTasks().forEach(t =>
-				{
-					if (t.id != droppedTask.id && t.order >= droppedTask.order)
-						t.order--;
-				});
-
-				this.taskList.sort();
-			});
 		}
 	}
 }

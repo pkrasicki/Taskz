@@ -21,8 +21,6 @@ import { ContextMenuComponent } from './components/ui/context-menu/context-menu.
 import { ModalComponent } from './components/ui/modal/modal.component';
 import { BoardListItemComponent } from './components/board-list-item/board-list-item.component';
 import { TextareaComponent } from './components/ui/textarea/textarea.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
 	declarations: [
@@ -48,9 +46,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 	  BrowserModule,
 	  HttpClientModule,
 	  AppRoutingModule,
-	  FormsModule,
-	  BrowserAnimationsModule,
-	  DragDropModule
+	  FormsModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

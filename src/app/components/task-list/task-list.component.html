@@ -1,4 +1,4 @@
-<div class="task-list" #listElement cdkDropList [cdkDropListData]="taskList.tasks" (cdkDropListDropped)="taskDropped($event)">
+<div class="task-list" #listElement>
 	<div class="header">
 		<h4 *ngIf="!isEditingListTitle">{{ taskList.title }}</h4>
 		<ui-text-input #listTitleInput [(inputValue)]="newListTitle" *ngIf="isEditingListTitle" (blur)="listTitleEditBlurred($event)" (focus)="listTitleEditFocused($event)"></ui-text-input>
@@ -6,7 +6,7 @@
 	</div>
 
 	<ul>
-		<li *ngFor="let task of taskList.tasks" cdkDrag>
+		<li *ngFor="let task of taskList.tasks">
 			<task [task]="task" [parentTaskList]="this"></task>
 		</li>
 	</ul>
