@@ -4,7 +4,7 @@ import { TaskList } from "../../../models/task-list";
 import { TaskService } from 'src/app/services/task.service';
 import { Task } from 'src/app/models/task';
 import { Board } from "src/app/models/board";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 
@@ -23,7 +23,7 @@ export class BoardComponent implements OnInit {
 	newListTitle: string = "";
 	subscriptions = new Subscription();
 
-	constructor(private taskService: TaskService, private route: ActivatedRoute, private dragulaService: DragulaService)
+	constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router, private dragulaService: DragulaService)
 	{
 		this.dragulaService.createGroup("LISTS",
 		{
@@ -65,12 +65,19 @@ export class BoardComponent implements OnInit {
 		error: (err) =>
 		{
 			this.isLoading = false;
-			if (err.error)
+
+			if (err.status == 404)
 			{
-				console.error(err.error.message);
+				this.router.navigate(["/404"], {skipLocationChange: true});
 			} else
 			{
-				console.error(err);
+				if (err.error)
+				{
+					console.error(err.error.message);
+				} else
+				{
+					console.error(err);
+				}
 			}
 		}});
 	}

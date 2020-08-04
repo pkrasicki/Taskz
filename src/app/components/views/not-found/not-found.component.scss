@@ -1,0 +1,19 @@
+.not-found
+{
+	height: 30%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: 28px;
+
+	.title
+	{
+		margin-bottom: 0;
+	}
+
+	p
+	{
+		margin-top: 5px;
+	}
+}
