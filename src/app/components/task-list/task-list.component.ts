@@ -19,6 +19,8 @@ export class TaskListComponent implements OnInit {
 	@ViewChildren(TaskComponent) taskComponents;
 	isEditingListTitle: boolean = false;
 	newListTitle: string;
+	isMouseOver: boolean = false;
+	isTaskOver: boolean = false;
 
 	constructor(private taskService: TaskService)
 	{ }
@@ -155,5 +157,15 @@ export class TaskListComponent implements OnInit {
 		{
 			this.listTitleInput.element.nativeElement.blur();
 		}
+	}
+
+	mouseEnter(e: MouseEvent)
+	{
+		this.isMouseOver = true;
+	}
+
+	mouseLeave(e: MouseEvent)
+	{
+		this.isMouseOver = false;
 	}
 }

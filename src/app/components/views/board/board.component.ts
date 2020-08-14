@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ViewChildren } from '@angular/core';
 import { TaskListComponent } from "../../task-list/task-list.component";
 import { TaskList } from "../../../models/task-list";
 import { TaskService } from 'src/app/services/task.service';
@@ -7,6 +7,8 @@ import { Board } from "src/app/models/board";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
+import { TaskEditModalComponent } from '../../task-edit-modal/task-edit-modal.component';
+import { ToggableEditComponent } from '../../ui/toggable-edit/toggable-edit.component';
 
 @Component({
 	selector: 'board',
@@ -14,14 +16,15 @@ import { Subscription } from 'rxjs';
 	styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-	@ViewChild("modal", {static: false}) modal;
-	@ViewChild("listEdit", {static: false}) listEdit;
+	@ViewChild("modal", {static: false}) modal: TaskEditModalComponent;
+	@ViewChild("listEdit", {static: false}) listEdit: ToggableEditComponent;
 	@ViewChildren(TaskListComponent) taskListComponents;
 	isLoading: boolean = true;
 	board: Board;
 	newTaskContent: string = "";
 	newListTitle: string = "";
 	subscriptions = new Subscription();
+	isTaskDragged: boolean = false;
 
 	constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router, private dragulaService: DragulaService)
 	{
@@ -37,6 +40,22 @@ export class BoardComponent implements OnInit {
 
 		this.subscriptions.add(
 			this.dragulaService.drop("TASKS").subscribe({next: (data) => this.taskDropped(data)})
+		);
+
+		this.subscriptions.add(
+			this.dragulaService.drag("TASKS").subscribe({next: (data) => this.taskDragStart(data)})
+		);
+
+		this.subscriptions.add(
+			this.dragulaService.dragend("TASKS").subscribe({next: (data) => this.taskDragEnd(data)})
+		);
+
+		this.subscriptions.add(
+			this.dragulaService.over("TASKS").subscribe({next: (data) => this.taskOver(data)})
+		);
+
+		this.subscriptions.add(
+			this.dragulaService.out("TASKS").subscribe({next: (data) => this.taskOut(data)})
 		);
 	}
 
@@ -304,6 +323,38 @@ export class BoardComponent implements OnInit {
 					currentTaskList.sort();
 				}
 			});
+		}
+	}
+
+	taskDragStart(data)
+	{
+		this.isTaskDragged = true;
+	}
+
+	taskDragEnd(data)
+	{
+		this.isTaskDragged = false;
+	}
+
+	taskOver(data)
+	{
+		if (data.container)
+		{
+			let id = data.container.dataset.listId;
+			let list = this.taskListComponents._results.find(l => l.taskList.id == id);
+			if (list)
+				list.isTaskOver = true;
+		}
+	}
+
+	taskOut(data)
+	{
+		if (data.container)
+		{
+			let id = data.container.dataset.listId;
+			let list = this.taskListComponents._results.find(l => l.taskList.id == id);
+			if (list)
+				list.isTaskOver = false;
 		}
 	}
 }

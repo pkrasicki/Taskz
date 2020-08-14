@@ -11,8 +11,8 @@
 			<ui-textarea #taskTitleInput [(inputValue)]="taskContent" *ngIf="isEditingTaskTitle" (blur)="taskTitleInputBlurred($event)"></ui-textarea>
 
 			<div class="buttons">
-				<!-- <ui-button class="btn"><i class="material-icons add-icon">person_add</i> Assign</ui-button> -->
-				<ui-button class="btn"><i class="material-icons add-icon">label</i> Edit label</ui-button>
+				<ui-button class="btn"><i class="material-icons add-icon">person_add</i> Assign</ui-button>
+				<ui-button class="btn"><i class="material-icons add-icon">label</i> Label</ui-button>
 				<ui-button class="btn"><i class="material-icons add-icon">date_range</i> Due date</ui-button>
 				<ui-button class="btn-danger" (click)="deleteTask()"><i class="material-icons add-icon">delete</i> Delete</ui-button>
 			</div>

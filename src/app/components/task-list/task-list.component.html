@@ -1,11 +1,11 @@
-<div class="task-list" #listElement>
+<div class="task-list" #listElement (mouseenter)="mouseEnter($event)" (mouseleave)="mouseLeave($event)">
 	<div class="header">
 		<h4 *ngIf="!isEditingListTitle" class="drag-handle">{{ taskList.title }}</h4>
 		<ui-text-input #listTitleInput [(inputValue)]="newListTitle" *ngIf="isEditingListTitle" (blur)="listTitleEditBlurred($event)"></ui-text-input>
 		<ui-button class="btn-list-settings" (click)="settingsBtnClicked($event)"><i class="material-icons">more_horiz</i></ui-button>
 	</div>
 
-	<ul dragula="TASKS" [(dragulaModel)]="taskList.tasks" [attr.data-list-id]="taskList.id">
+	<ul dragula="TASKS" [(dragulaModel)]="taskList.tasks" [attr.data-list-id]="taskList.id" [ngClass]="(parentBoard.isTaskDragged && isMouseOver && !isTaskOver) ? 'drag-mode' : ''">
 		<li *ngFor="let task of taskList.tasks" id="{{task.id}}">
 			<task [task]="task" [parentTaskList]="this"></task>
 		</li>
