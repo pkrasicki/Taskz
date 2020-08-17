@@ -5,13 +5,14 @@
 	width: 300px;
 	flex-shrink: 0;
 	background: $card;
-	padding: 10px;
 	border-radius: 5px;
 	margin-right: 10px;
+	padding-bottom: 10px;
 
-	ul.drag-mode
+	& > ul
 	{
-		padding-bottom: 44px;
+		padding: 10px;
+		padding-top: 0;
 	}
 
 	ui-button
@@ -20,17 +21,27 @@
 		margin-right: 10px;
 	}
 
-	.header
+	ui-toggable-edit
+	{
+		display: block;
+		width: 280px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	#header
 	{
 		display: grid;
 		grid-template-columns: 92% 8%;
 		overflow-wrap: break-word;
+		padding: 10px 10px 5px 11px;
 
 		h4
 		{
 			margin-top: 0px;
-			margin-bottom: 5px;
+			margin-bottom: 0px;
 			overflow-wrap: break-word;
+			pointer-events: none; // this makes list title unselectable but it's needed for drag handle to work
 		}
 
 		.btn-list-settings
@@ -41,7 +52,10 @@
 
 	.btn-add
 	{
-		margin-top: 5px;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 0;
+		width: 280px;
 	}
 
 	.buttons
@@ -64,4 +78,9 @@
 			background: rgba(255, 255, 255, 0.08);
 		}
 	}
+}
+
+.add-list, ::ng-deep .add-list
+{
+	padding-top: 10px;
 }

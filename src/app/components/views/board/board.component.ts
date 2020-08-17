@@ -24,7 +24,6 @@ export class BoardComponent implements OnInit {
 	newTaskContent: string = "";
 	newListTitle: string = "";
 	subscriptions = new Subscription();
-	isTaskDragged: boolean = false;
 
 	constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router, private dragulaService: DragulaService)
 	{
@@ -40,22 +39,6 @@ export class BoardComponent implements OnInit {
 
 		this.subscriptions.add(
 			this.dragulaService.drop("TASKS").subscribe({next: (data) => this.taskDropped(data)})
-		);
-
-		this.subscriptions.add(
-			this.dragulaService.drag("TASKS").subscribe({next: (data) => this.taskDragStart(data)})
-		);
-
-		this.subscriptions.add(
-			this.dragulaService.dragend("TASKS").subscribe({next: (data) => this.taskDragEnd(data)})
-		);
-
-		this.subscriptions.add(
-			this.dragulaService.over("TASKS").subscribe({next: (data) => this.taskOver(data)})
-		);
-
-		this.subscriptions.add(
-			this.dragulaService.out("TASKS").subscribe({next: (data) => this.taskOut(data)})
 		);
 	}
 
@@ -323,38 +306,6 @@ export class BoardComponent implements OnInit {
 					currentTaskList.sort();
 				}
 			});
-		}
-	}
-
-	taskDragStart(data)
-	{
-		this.isTaskDragged = true;
-	}
-
-	taskDragEnd(data)
-	{
-		this.isTaskDragged = false;
-	}
-
-	taskOver(data)
-	{
-		if (data.container)
-		{
-			let id = data.container.dataset.listId;
-			let list = this.taskListComponents._results.find(l => l.taskList.id == id);
-			if (list)
-				list.isTaskOver = true;
-		}
-	}
-
-	taskOut(data)
-	{
-		if (data.container)
-		{
-			let id = data.container.dataset.listId;
-			let list = this.taskListComponents._results.find(l => l.taskList.id == id);
-			if (list)
-				list.isTaskOver = false;
 		}
 	}
 }
