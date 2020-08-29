@@ -14,6 +14,12 @@ const config =
 		dbName: ""
 	},
 
+	redis:
+	{
+		host: "localhost",
+		port: 6379
+	},
+
 	security:
 	{
 		sessionSecret: crypto.randomBytes(CRYPTO_BYTES).toString("hex"),

@@ -9,7 +9,7 @@ const db = require("./backend/db/db");
 const PORT = process.env.PORT || 4000;
 require("./backend/auth/passport-strategy")(passport);
 
-let redisClient = redis.createClient();
+let redisClient = redis.createClient(config.redis.port, config.redis.host);
 app.use(express.json());
 
 app.use(session({
