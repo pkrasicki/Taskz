@@ -15,8 +15,14 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "setup": "node setup.js"
+    "postinstall": "node setup.js"
   },
+  "files": [
+    "app.js",
+    "setup.js",
+    "backend/",
+    "dist/"
+  ],
   "dependencies": {
     "@angular/animations": "~8.2.14",
     "@angular/common": "~8.2.14",

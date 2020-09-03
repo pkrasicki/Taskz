@@ -21,7 +21,7 @@ const load = () =>
 
 	} else
 	{
-		throw new Error(`Config file was not found in path ${CONFIG_PATH}`);
+		throw new Error(`Config file was not found in path '${CONFIG_PATH}'. Please create it by running 'node setup.js'.`);
 	}
 }
 
