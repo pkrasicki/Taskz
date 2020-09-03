@@ -124,7 +124,7 @@ export class TaskListComponent implements OnInit {
 		}, 50);
 	}
 
-	listTitleEditBlurred()
+	listTitleEditBlurred(e)
 	{
 		this.isEditingListTitle = false;
 

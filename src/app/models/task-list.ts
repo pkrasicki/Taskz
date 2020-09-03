@@ -4,7 +4,7 @@ export class TaskList
 	id: string;
 	title: string;
 	order: number;
-	private tasks: Task[] = [];
+	tasks: Task[] = [];
 
 	constructor(title: string, order: number, id?: string, tasks?: Task[])
 	{

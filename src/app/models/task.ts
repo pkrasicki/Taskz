@@ -5,7 +5,7 @@ export class Task
 	order: number;
 	dueDate: Date;
 	label: number;
-	private comments = [];
+	comments = [];
 
 	constructor(content: string, order: number, id?: string)
 	{
