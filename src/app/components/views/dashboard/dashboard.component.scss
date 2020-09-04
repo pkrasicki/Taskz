@@ -62,7 +62,17 @@
 		 	{
 				background-color: rgba(255, 255, 255, 0.1);
 				margin-bottom: 5px;
-		 	}
+			 }
+
+			 ui-text-input.error > input
+			 {
+				 border-color: $danger;
+
+				 &:focus
+				 {
+					 border-color: $danger-light;
+				 }
+			 }
 		}
 
 		.color-menu

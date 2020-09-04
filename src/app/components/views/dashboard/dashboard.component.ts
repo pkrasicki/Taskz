@@ -15,12 +15,14 @@ export class DashboardComponent implements OnInit {
 	@ViewChild("createBoardMenu", {static: false}) createBoardMenu;
 	@ViewChild("createBtn", {static: false}) createBtn;
 	@ViewChildren("boardItem") boardItems;
+	@ViewChild("newBoardNameInput", {static: false}) newBoardNameInput;
 	username: string;
 	boards: Board[] = [];
 	newBoardName: string;
 	newBoardType: string = "0";
 	newBoardColor: string = DEFAULT_BOARD_COLOR;
 	colorMenuExpanded: boolean = false;
+	boardNameIncorrect: boolean = false;
 
 	constructor(private taskService: TaskService, private authService: AuthService, private router: Router) { }
 
@@ -68,6 +70,10 @@ export class DashboardComponent implements OnInit {
 			{
 				console.error(err.error.message);
 			});
+		} else
+		{
+			this.boardNameIncorrect = true;
+			this.newBoardNameInput.element.nativeElement.focus();
 		}
 	}
 
@@ -87,5 +93,15 @@ export class DashboardComponent implements OnInit {
 		let index = this.boards.findIndex((b) => b.id == boardId);
 		if (index > -1)
 			this.boards.splice(index, 1);
+	}
+
+	newBoardNameEdited(e: KeyboardEvent)
+	{
+		this.boardNameIncorrect = false;
+	}
+
+	menuHidden()
+	{
+		this.boardNameIncorrect = false;
 	}
 }

@@ -10,9 +10,9 @@
 		</ul>
 	</div>
 
-	<ui-context-menu class="create-board-modal" #createBoardMenu>
+	<ui-context-menu class="create-board-modal" #createBoardMenu (hide)="menuHidden()">
 		<section>
-			<ui-text-input [placeholder]="'Name for your board'" [(inputValue)]="newBoardName"></ui-text-input>
+			<ui-text-input #newBoardNameInput [placeholder]="'Name for your board'" [(inputValue)]="newBoardName" [ngClass]="boardNameIncorrect ? 'error' : ''" (input)="newBoardNameEdited($event)"></ui-text-input>
 		</section>
 
 		<section>

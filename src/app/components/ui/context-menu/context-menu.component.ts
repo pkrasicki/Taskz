@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
 
 @Component({
 	selector: 'ui-context-menu',
@@ -7,6 +7,7 @@ import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 })
 export class ContextMenuComponent implements OnInit {
 	@ViewChild("contextMenu", {static: false}) element;
+	@Output("hide") hideEvent: EventEmitter<any> = new EventEmitter();
 	isVisible: boolean = false;
 	isOnScreen: boolean = false;
 	constructor() { }
@@ -48,6 +49,7 @@ export class ContextMenuComponent implements OnInit {
 
 	hide()
 	{
+		this.hideEvent.emit();
 		this.isVisible = false;
 		setTimeout(() => {this.isOnScreen = false}, 50);
 	}
