@@ -6,7 +6,7 @@
 
 		<div class="content">
 			<h4 class="task-content" title="click to edit" *ngIf="!isEditingTaskTitle" (click)="showTaskTitleInput()">
-				<pre>{{ taskContent }}</pre> <i class="material-icons add-icon">edit</i>
+				<pre>{{ taskContent }} <i class="material-icons add-icon">edit</i></pre>
 			</h4>
 			<ui-textarea #taskTitleInput [(inputValue)]="taskContent" *ngIf="isEditingTaskTitle" (blur)="taskTitleInputBlurred($event)"></ui-textarea>
 
