@@ -110,6 +110,12 @@ input:not([type=submit]):focus
 	}
 }
 
+.btn[disabled=true]
+{
+	opacity: 0.5;
+	pointer-events: none;
+}
+
 .btn-primary
 {
 	@extend .btn;
@@ -265,6 +271,12 @@ input:not([type=submit]):focus
 	height: 100vh;
 	padding: 7%;
 	background-color: rgba(0, 0, 0, 0.35);
+}
+
+ui-text-input[disabled=true]
+{
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 @keyframes spin

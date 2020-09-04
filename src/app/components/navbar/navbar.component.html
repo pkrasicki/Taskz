@@ -1,8 +1,7 @@
 <div class="navbar">
 	<div class="boards">
 		<ui-button class="btn-nav" [link]="'/boards'"><i class="material-icons add-icon">dashboard</i> Boards</ui-button>
-		<!-- TODO -->
-		<!-- <ui-button class="btn-nav" *ngIf="board != null else dashboard"><i class="material-icons add-icon">person_add</i> Invite User</ui-button> -->
+		<ui-button disabled="true" class="btn-nav" *ngIf="board != null else dashboard"><i class="material-icons add-icon">person_add</i> Invite User</ui-button>
 		<ui-button *ngIf="board == null" class="btn-success" (click)="createBoardClicked($event)"><i class="material-icons add-icon">add</i> New Board</ui-button>
 	</div>
 
@@ -14,9 +13,8 @@
 		<ui-button class="btn-nav" #profileBtn (click)="userMenuClicked($event)"><i class="material-icons add-icon">person</i> {{ username }}</ui-button>
 
 		<ui-context-menu #userMenu>
-			<!-- TODO -->
-			<!-- <li><ui-button class="btn-nav">Profile</ui-button></li>
-			<li><ui-button class="btn-nav">Account Settings</ui-button></li> -->
+			<li><ui-button disabled="true" class="btn-nav">Profile</ui-button></li>
+			<li><ui-button disabled="true" class="btn-nav">Account Settings</ui-button></li>
 			<li><ui-button class="btn-nav" (click)="logout()">Logout</ui-button></li>
 		</ui-context-menu>
 	</div>

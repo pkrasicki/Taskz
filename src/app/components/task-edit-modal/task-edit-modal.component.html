@@ -11,9 +11,9 @@
 			<ui-textarea #taskTitleInput [(inputValue)]="taskContent" *ngIf="isEditingTaskTitle" (blur)="taskTitleInputBlurred($event)"></ui-textarea>
 
 			<div class="buttons">
-				<ui-button class="btn"><i class="material-icons add-icon">person_add</i> Assign</ui-button>
-				<ui-button class="btn"><i class="material-icons add-icon">label</i> Label</ui-button>
-				<ui-button class="btn"><i class="material-icons add-icon">date_range</i> Due date</ui-button>
+				<ui-button disabled="true" class="btn"><i class="material-icons add-icon">person_add</i> Assign</ui-button>
+				<ui-button disabled="true" class="btn"><i class="material-icons add-icon">label</i> Label</ui-button>
+				<ui-button disabled="true" class="btn"><i class="material-icons add-icon">date_range</i> Due date</ui-button>
 				<ui-button class="btn-danger" (click)="deleteTask()"><i class="material-icons add-icon">delete</i> Delete</ui-button>
 			</div>
 
@@ -29,7 +29,7 @@
 
 				<p class="no-comments" *ngIf="currentTask != null && currentTask.comments.length == 0">There aren't any comments yet.</p>
 				<!-- <ui-button class="btn add-icon"><i class="material-icons">edit</i> Comment</ui-button> -->
-				<ui-text-input [placeholder]="'Write a message...'"></ui-text-input>
+				<ui-text-input disabled="true" [placeholder]="'Write a message...'"></ui-text-input>
 				<!-- <ui-button class="btn-success"><i class="material-icons add-icon">send</i> Send</ui-button> -->
 			</div>
 
