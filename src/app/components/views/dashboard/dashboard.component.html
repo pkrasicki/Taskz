@@ -2,7 +2,7 @@
 	<navbar (createBoardClick)="createBoardClicked($event)"></navbar>
 
 	<div class="container">
-		<h2 class="text-center">Your boards</h2>
+		<h2 class="text-center">Your Boards</h2>
 		<ul class="board-list">
 			<li *ngFor="let board of boards" #boardItem>
 				<board-list-item [board]="board" [username]="username" (boardDelete)="boardDeleted($event)"></board-list-item>

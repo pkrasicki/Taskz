@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-login',
@@ -10,35 +10,48 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 	username: string;
 	password: string;
-	messages: string[] = [];
+	successMessages: string[] = [];
 	errorMessages: string[] = [];
-	constructor(private authService: AuthService, private router: Router) { }
+	infoMessages: string[] = [];
 
-	ngOnInit() {
-		if (this.authService.getJustLoggedOut())
-			this.messages.push("You are now logged out");
-		else if (this.authService.getJustRegistered())
-			this.messages.push("Registration complete. You can now log in");
+	constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) { }
+
+	ngOnInit()
+	{
+		let justLoggedOut = this.route.snapshot.queryParamMap.get("loggedOut");
+		let justRegistered = this.route.snapshot.queryParamMap.get("registered");
+		let isRestrictedUrl = this.route.snapshot.queryParamMap.get("restrictedUrl");
+
+		if (justLoggedOut)
+			this.successMessages.push("You are now logged out");
+		else if (justRegistered)
+			this.successMessages.push("Registration complete. You can now log in");
+		else if (isRestrictedUrl)
+			this.infoMessages.push("You need to log in to access this page");
 	}
 
 	formSubmitted(e)
 	{
-		this.messages = [];
+		this.successMessages = [];
 		this.errorMessages = [];
+		this.infoMessages = [];
 
-		this.authService.login(this.username, this.password).subscribe((res) =>
+		this.authService.login(this.username, this.password).subscribe(
 		{
-			if (res.success == true)
+			next: (res) =>
 			{
-				this.authService.setUsername(res.data.name);
-				this.authService.setJustRegistered(false);
-				this.router.navigate(["/boards"]);
+				let destinationUrl = this.route.snapshot.queryParamMap.get("url");
+				if (destinationUrl != null && destinationUrl != "")
+					this.router.navigate([destinationUrl]);
+				else
+					this.router.navigate(["/boards"]);
+
+			}, error: (err) =>
+			{
+				let message = err.error.message;
+				if (message != null)
+					this.errorMessages.push(message);
 			}
-		}, (err) =>
-		{
-			let message = err.error.message;
-			if (message != null)
-				this.errorMessages.push(message);
 		});
 	}
 }

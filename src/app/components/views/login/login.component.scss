@@ -9,7 +9,7 @@
 	justify-content: center;
 	padding-top: 10vh;
 
-	.message, .message-error
+	.message, .message-error, .message-info
 	{
 		padding: 10px;
 		background-color: $success-dark;
@@ -21,6 +21,11 @@
 	.message-error
 	{
 		background-color: $danger-dark;
+	}
+
+	.message-info
+	{
+		background-color: darken($secondary-dark, 10);
 	}
 
 	form

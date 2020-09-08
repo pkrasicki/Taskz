@@ -26,23 +26,25 @@ export class DashboardComponent implements OnInit {
 
 	constructor(private taskService: TaskService, private authService: AuthService, private router: Router) { }
 
-	ngOnInit() {
+	ngOnInit()
+	{
 		this.username = this.authService.getUsername();
-		this.taskService.getBoards().subscribe((res) =>
+		this.taskService.getBoards().subscribe(
 		{
-			if (res.success == true)
+			next: (res) =>
 			{
 				res.data.forEach((board) =>
 				{
 					this.boards.push(new Board(board.ownerUsername, board.title, board.type, board.color, [], board.uuid));
 				});
-			}
-		}, (err) =>
-		{
-			console.error(err.error.message);
 
-			if (err.status == 401)
-				this.router.navigate(["/login"]);
+			}, error: (err) =>
+			{
+				if (err.status == 401)
+					this.router.navigate(["/login"], {queryParams: {restrictedUrl: true}});
+				else
+					console.error(err.error.message);
+			}
 		});
 	}
 
@@ -56,20 +58,25 @@ export class DashboardComponent implements OnInit {
 
 			let board = new Board("", this.newBoardName, parseInt(this.newBoardType), color);
 
-			this.taskService.createBoard(board).subscribe((res) =>
+			this.taskService.createBoard(board).subscribe(
 			{
-				if (res.success == true)
+				next: (res) =>
 				{
 					this.boards.push(new Board(res.data.ownerUsername, res.data.title, res.data.type, res.data.color, [], res.data.uuid));
 					this.createBoardMenu.hide();
 					this.newBoardName = null;
 					this.newBoardType = "0";
 					this.newBoardColor = DEFAULT_BOARD_COLOR;
+
+				}, error: (err) =>
+				{
+					if (err.status == 401)
+						this.router.navigate(["/login"], {queryParams: {restrictedUrl: true}});
+					else
+						console.error(err.error.message);
 				}
-			}, (err) =>
-			{
-				console.error(err.error.message);
 			});
+
 		} else
 		{
 			this.boardNameIncorrect = true;

@@ -1,21 +1,34 @@
 <div class="navbar">
 	<div class="boards">
-		<ui-button class="btn-nav" [link]="'/boards'"><i class="material-icons add-icon">dashboard</i> Boards</ui-button>
-		<ui-button *ngIf="board != null" disabled="true" class="btn-nav"><i class="material-icons add-icon">person_add</i> Invite User</ui-button>
-		<ui-button *ngIf="board == null" class="btn-success" (click)="createBoardClicked($event)"><i class="material-icons add-icon">add</i> New Board</ui-button>
+		<ng-container *ngIf="isAuthenticated()">
+			<ui-button class="btn-nav" [link]="'/boards'"><i class="material-icons add-icon">dashboard</i> Boards</ui-button>
+			<ui-button *ngIf="board != null" disabled="true" class="btn-nav"><i class="material-icons add-icon">person_add</i> Invite User</ui-button>
+			<ui-button *ngIf="board == null" class="btn-success" (click)="createBoardClicked($event)"><i class="material-icons add-icon">add</i> New Board</ui-button>
+		</ng-container>
 	</div>
 
 	<div class="board-title">
 		<h3 *ngIf="board != null">{{ board.title }}</h3>
+		<!-- <h3 *ngIf="board != null; else dashboardTitle">{{ board.title }}</h3> -->
+
+		<!-- <ng-template #dashboardTitle>
+			<h3 class="dashboard-title"><i class="material-icons add-icon">dashboard</i>&nbsp;<ng-content></ng-content></h3>
+		</ng-template> -->
 	</div>
 
 	<div class="user">
-		<ui-button class="btn-nav" #profileBtn (click)="userMenuClicked($event)"><i class="material-icons add-icon">person</i> {{ username }}</ui-button>
+		<ng-container *ngIf="isAuthenticated(); else loginBtn">
+			<ui-button class="btn-nav" #profileBtn (click)="userMenuClicked($event)"><i class="material-icons add-icon">person</i> {{ getUsername() }}</ui-button>
 
-		<ui-context-menu #userMenu>
-			<li><ui-button disabled="true" class="btn-nav">Profile</ui-button></li>
-			<li><ui-button disabled="true" class="btn-nav">Account Settings</ui-button></li>
-			<li><ui-button class="btn-nav" (click)="logout()">Logout</ui-button></li>
-		</ui-context-menu>
+			<ui-context-menu #userMenu>
+				<li><ui-button disabled="true" class="btn-nav">Profile</ui-button></li>
+				<li><ui-button disabled="true" class="btn-nav">Account Settings</ui-button></li>
+				<li><ui-button class="btn-nav" (click)="logout()">Logout</ui-button></li>
+			</ui-context-menu>
+		</ng-container>
+
+		<ng-template #loginBtn>
+			<ui-button class="btn-success" [link]="'/login'" [params]="{url: currentUrl}"><i class="material-icons add-icon">person</i> Log In</ui-button>
+		</ng-template>
 	</div>
 </div>

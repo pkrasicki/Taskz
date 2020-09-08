@@ -13,22 +13,22 @@ export class NavbarComponent implements OnInit {
 	@ViewChild("userMenu", {static: false}) userMenu;
 	@ViewChild("profileBtn", {static: false}) profileBtn;
 	@Output() createBoardClick: EventEmitter<any> = new EventEmitter();
-	username: string;
+	currentUrl: string;
 
 	constructor(private authService: AuthService, private router: Router) { }
 
-	ngOnInit() {
-		this.username = this.authService.getUsername();
+	ngOnInit()
+	{
+		this.currentUrl = this.router.url;
 	}
 
 	logout()
 	{
-		this.authService.logout().subscribe(res =>
+		this.authService.logout().subscribe(
 		{
-			if (res.success)
+			next: (res) =>
 			{
-				this.authService.setJustLoggedOut(true);
-				this.router.navigate(["/login"]);
+				this.router.navigate(["/login"], {queryParams: {loggedOut: true}});
 			}
 		});
 	}
@@ -42,5 +42,15 @@ export class NavbarComponent implements OnInit {
 	createBoardClicked(e)
 	{
 		this.createBoardClick.emit(e);
+	}
+
+	getUsername(): string
+	{
+		return this.authService.getUsername() || "";
+	}
+
+	isAuthenticated(): boolean
+	{
+		return this.authService.isAuthenticated();
 	}
 }

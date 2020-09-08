@@ -45,9 +45,7 @@ export class RegisterComponent implements OnInit {
 			if (res.success == true)
 			{
 				res.messages = [];
-				this.authService.setJustLoggedOut(false);
-				this.authService.setJustRegistered(true);
-				this.router.navigate(["/login"]);
+				this.router.navigate(["/login"], {queryParams: {registered: true}});
 			}
 		}, (err) =>
 		{

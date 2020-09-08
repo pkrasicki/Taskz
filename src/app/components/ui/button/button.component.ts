@@ -7,7 +7,8 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 })
 export class ButtonComponent implements OnInit {
 	@ViewChild("btn", {static: false}) element;
-	@Input("link") link;
+	@Input("link") link: string;
+	@Input("params") params: any = {};
 	constructor() { }
 
 	ngOnInit() {

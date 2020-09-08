@@ -4,6 +4,7 @@
   "license": "GPL-3.0-only",
   "description": "Free and open source task management app",
   "author": "pkrasicki",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/pkrasicki/Taskz.git"
@@ -15,10 +16,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "node setup.js"
+    "setup": "node setup.js",
+    "postinstall": "npm run setup"
   },
   "files": [
-    "app.js",
     "setup.js",
     "backend/",
     "dist/"

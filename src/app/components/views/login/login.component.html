@@ -1,14 +1,20 @@
 <div class="login">
 	<h1>Log In</h1>
-	<div class="message" *ngIf="messages.length > 0">
+	<div class="message" *ngIf="successMessages.length > 0">
 		<ul>
-			<li *ngFor="let message of messages">{{ message }}</li>
+			<li *ngFor="let message of successMessages">{{ message }}</li>
 		</ul>
 	</div>
 
 	<div class="message-error" *ngIf="errorMessages.length > 0">
 		<ul>
 			<li *ngFor="let message of errorMessages">{{ message }}</li>
+		</ul>
+	</div>
+
+	<div class="message-info" *ngIf="infoMessages.length > 0">
+		<ul>
+			<li *ngFor="let message of infoMessages">{{ message }}</li>
 		</ul>
 	</div>
 

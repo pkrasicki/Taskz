@@ -13,13 +13,9 @@ export class WelcomeComponent implements OnInit {
 
 	ngOnInit()
 	{
-		this.authService.getUserData().subscribe((res) =>
+		if (this.authService.isAuthenticated())
 		{
-			if (res.success == true)
-				this.router.navigate(["/boards"]);
-		}, (err) =>
-		{
-			// do nothing
-		});
+			this.router.navigate(["/boards"]);
+		}
 	}
 }

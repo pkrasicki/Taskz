@@ -9,6 +9,7 @@ import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 import { TaskEditModalComponent } from '../../task-edit-modal/task-edit-modal.component';
 import { ToggableEditComponent } from '../../ui/toggable-edit/toggable-edit.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
 	selector: 'board',
@@ -25,7 +26,7 @@ export class BoardComponent implements OnInit {
 	newListTitle: string = "";
 	subscriptions = new Subscription();
 
-	constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router, private dragulaService: DragulaService)
+	constructor(private taskService: TaskService, private route: ActivatedRoute, private router: Router, private dragulaService: DragulaService, private authService: AuthService)
 	{
 		this.dragulaService.createGroup("LISTS",
 		{
@@ -46,42 +47,41 @@ export class BoardComponent implements OnInit {
 	{
 		let username = this.route.snapshot.paramMap.get("username");
 		let boardName = this.route.snapshot.paramMap.get("boardName");
+
 		this.taskService.setBoardOwner(username);
 		this.taskService.setBoardName(boardName);
 
-		this.taskService.getBoard().subscribe({
-		next: (res) =>
+		this.taskService.getBoard().subscribe(
 		{
-			let taskLists = res.data.taskLists.map(list =>
+			next: (res) =>
 			{
-				let tasks = list.tasks.map(task => new Task(task.content, task.order, task.uuid));
-				tasks.sort((a, b) => a.order - b.order);
-				return new TaskList(list.title, list.order, list.uuid, tasks);
-			});
-
-			this.board = new Board(res.data.ownerUsername, res.data.title, res.data.type, res.data.color, taskLists);
-			this.sortTaskLists();
-			this.isLoading = false;
-		},
-
-		error: (err) =>
-		{
-			this.isLoading = false;
-
-			if (err.status == 404)
-			{
-				this.router.navigate(["/404"], {skipLocationChange: true});
-			} else
-			{
-				if (err.error)
+				let taskLists = res.data.taskLists.map(list =>
 				{
-					console.error(err.error.message);
+					let tasks = list.tasks.map(task => new Task(task.content, task.order, task.uuid));
+					tasks.sort((a, b) => a.order - b.order);
+					return new TaskList(list.title, list.order, list.uuid, tasks);
+				});
+
+				this.board = new Board(res.data.ownerUsername, res.data.title, res.data.type, res.data.color, taskLists);
+				this.sortTaskLists();
+				this.isLoading = false;
+
+			}, error: (err) =>
+			{
+				this.isLoading = false;
+
+				if (err.status == 404)
+				{
+					this.router.navigate(["/404"], {skipLocationChange: true});
 				} else
 				{
-					console.error(err);
+					if (err.status == 401)
+						this.router.navigate(["/login"], {queryParams: {restrictedUrl: true, url: this.router.url}});
+					else
+						console.error(err.error.message);
 				}
 			}
-		}});
+		});
 	}
 
 	ngOnDestroy()
@@ -121,16 +121,17 @@ export class BoardComponent implements OnInit {
 			});
 		}
 
-		this.taskService.createTaskList(list).subscribe((res) =>
+		this.taskService.createTaskList(list).subscribe(
 		{
-			if (res.success)
+			next: (res) =>
 			{
 				this.board.taskLists.push(new TaskList(res.data.title, res.data.order, res.data.id, res.data.tasks));
 				this.sortTaskLists();
+
+			}, error: (err) =>
+			{
+				console.error(err.error.message);
 			}
-		}, (err) =>
-		{
-			console.error(err.error.message);
 		});
 	}
 
@@ -214,21 +215,19 @@ export class BoardComponent implements OnInit {
 			targetOrder = 0;
 
 		let list = new TaskList(droppedList.title, targetOrder, droppedList.id);
-		this.taskService.updateTaskList(list).subscribe({
+		this.taskService.updateTaskList(list).subscribe(
+		{
 			next: (res) =>
 			{
-				if (res.success == true)
+				this.board.taskLists.forEach(l =>
 				{
-					this.board.taskLists.forEach(l =>
-					{
-						if (l.order >= targetOrder)
-							l.order++;
-					});
+					if (l.order >= targetOrder)
+						l.order++;
+				});
 
-					droppedList.order = res.data.order;
-				}
-			},
-			error: (err) =>
+				droppedList.order = res.data.order;
+
+			}, error: (err) =>
 			{
 				console.error(err.error.message);
 				this.sortTaskLists();
@@ -255,28 +254,26 @@ export class BoardComponent implements OnInit {
 		{
 			let task = new Task(droppedTask.content, targetOrder);
 
-			this.taskService.createTask(currentTaskList.id, task).subscribe({
+			this.taskService.createTask(currentTaskList.id, task).subscribe(
+			{
 				next: (res) =>
 				{
-					if (res.success == true)
+					currentTaskList.getTasks().forEach(t =>
 					{
-						currentTaskList.getTasks().forEach(t =>
-						{
-							if (t.order >= targetOrder)
-								t.order++;
-						});
+						if (t.order >= targetOrder)
+							t.order++;
+					});
 
-						let oldTask = new Task(droppedTask.content, droppedTask.order, droppedTask.id);
-						droppedTask.id = res.data.id;
-						droppedTask.order = res.data.order;
+					let oldTask = new Task(droppedTask.content, droppedTask.order, droppedTask.id);
+					droppedTask.id = res.data.id;
+					droppedTask.order = res.data.order;
 
-						this.taskService.deleteTask(oldTask).subscribe({
-							next: (res) => {},
-							error: (err) => console.error(err.error.message)
-						});
-					}
-				},
-				error: (err) =>
+					this.taskService.deleteTask(oldTask).subscribe({
+						next: (res) => {},
+						error: (err) => console.error(err.error.message)
+					});
+
+				}, error: (err) =>
 				{
 					console.error(err.error.message);
 					currentTaskList.sort();
@@ -286,21 +283,19 @@ export class BoardComponent implements OnInit {
 		} else
 		{
 			let task = new Task(droppedTask.content, targetOrder, droppedTask.id);
-			this.taskService.updateTask(task).subscribe({
+			this.taskService.updateTask(task).subscribe(
+			{
 				next: (res) =>
 				{
-					if (res.success == true)
+					currentTaskList.getTasks().forEach(t =>
 					{
-						currentTaskList.getTasks().forEach(t =>
-						{
-							if (t.order >= targetOrder)
-								t.order++;
-						});
+						if (t.order >= targetOrder)
+							t.order++;
+					});
 
-						droppedTask.order = res.data.order;
-					}
-				},
-				error: (err) =>
+					droppedTask.order = res.data.order;
+
+				}, error: (err) =>
 				{
 					console.error(err.error.message);
 					currentTaskList.sort();

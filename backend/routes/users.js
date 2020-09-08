@@ -24,6 +24,7 @@ router.post("/login", passport.authenticate("local", {failWithError: true}), (re
 	};
 
 	res.cookie("username", req.user.Name);
+	res.cookie("isAuthenticated", true);
 	res.json(new SuccessResponse(user));
 
 }, (err, req, res, next) =>
@@ -102,22 +103,11 @@ router.post("/register", (req, res) =>
 	}
 });
 
-router.get("/user", (req, res) =>
-{
-	if (req.isAuthenticated())
-	{
-		res.json(new SuccessResponse({authenticated: true}));
-	} else
-	{
-		res.status(401);
-		res.json(new ErrorResponse("Not authenticated", {authenticated: false}));
-	}
-});
-
 router.get("/logout", (req, res) =>
 {
 	req.logout();
 	res.cookie("username", "", {expires: new Date()});
+	res.cookie("isAuthenticated", false, {expires: new Date()});
 	res.json(new SuccessResponse());
 });
 
@@ -171,6 +161,7 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 		} else if (!isAuthenticated)
 		{
 			res.status(401);
+			res.cookie("isAuthenticated", false);
 			res.json(new ErrorResponse("Not authenticated", {authenticated: false}));
 
 		} else
@@ -178,9 +169,13 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 			let user = new User(req.user.Name, req.user.UserId);
 			let hasAccess = await user.hasAccess(boardId);
 			if (hasAccess)
+			{
+				res.cookie("isAuthenticated", true);
 				res.json(new SuccessResponse(board));
-			else
+			} else
+			{
 				noPermissionResponse(res);
+			}
 		}
 	}
 });

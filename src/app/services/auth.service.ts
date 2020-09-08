@@ -6,9 +6,6 @@ import { Observable } from "rxjs";
 	providedIn: 'root'
 })
 export class AuthService {
-	private username: string;
-	private justRegistered: boolean = false;
-	private justLoggedOut: boolean = false;
 
 	constructor(private http: HttpClient) { }
 
@@ -40,56 +37,30 @@ export class AuthService {
 		return this.http.get<any>("/users/logout");
 	}
 
+	getCookie(keyName: string): string
+	{
+		let pairs = document.cookie.split(";");
+
+		for (let pair of pairs)
+		{
+			let arr = pair.split("=");
+			if (arr.length == 2)
+			{
+				if (arr[0].trim() == keyName)
+					return arr[1];
+			}
+		}
+
+		return null;
+	}
+
 	getUsername(): string
 	{
-		if (this.username != "" && this.username != null)
-			return this.username;
-		else
-		{
-			let array = document.cookie.split("=");
-			if (array.length >= 2)
-			{
-				for (let i = 0; i < array.length; i++)
-				{
-					if (array[i] == "username" && i + 1 < array.length)
-					{
-						this.setUsername(array[i+1]);
-						return this.username;
-					}
-				}
-			}
-
-			return "";
-		}
+		return this.getCookie("username");
 	}
 
-	setUsername(username: string)
+	isAuthenticated(): boolean
 	{
-		this.username = username;
-	}
-
-	getUserData()
-	{
-		return this.http.get<any>("/users/user");
-	}
-
-	getJustRegistered(): boolean
-	{
-		return this.justRegistered;
-	}
-
-	setJustRegistered(value: boolean)
-	{
-		this.justRegistered = value;
-	}
-
-	getJustLoggedOut(): boolean
-	{
-		return this.justLoggedOut;
-	}
-
-	setJustLoggedOut(value: boolean)
-	{
-		this.justLoggedOut = value;
+		return this.getCookie("isAuthenticated") == "true";
 	}
 }
