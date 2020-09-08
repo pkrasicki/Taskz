@@ -10,7 +10,7 @@ import { Board } from 'src/app/models/board';
 export class BoardListItemComponent implements OnInit {
 	@Input("board") board: Board;
 	@Input("username") username: string;
-	@Output("boardDelete") boardDelete: EventEmitter<string> = new EventEmitter<string>();
+	@Output("boardDelete") boardDelete: EventEmitter<{id: string, type: number}> = new EventEmitter<{id: string, type: number}>();
 	constructor(private taskService: TaskService) { }
 
 	ngOnInit() {
@@ -26,7 +26,7 @@ export class BoardListItemComponent implements OnInit {
 			{
 				next: (res) =>
 				{
-					this.boardDelete.emit(res.data.id);
+					this.boardDelete.emit({id: res.data.id, type: this.board.type});
 				}, error: (err) =>
 				{
 					console.error(err.error.message);

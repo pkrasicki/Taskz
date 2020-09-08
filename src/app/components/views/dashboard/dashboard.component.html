@@ -2,9 +2,18 @@
 	<navbar (createBoardClick)="createBoardClicked($event)"></navbar>
 
 	<div class="container">
-		<h2 class="text-center">Your Boards</h2>
+		<h2 class="text-center">Private Boards</h2>
+		<p class="text-center" *ngIf="privateBoards.length == 0">You don't have any private boards</p>
 		<ul class="board-list">
-			<li *ngFor="let board of boards" #boardItem>
+			<li *ngFor="let board of privateBoards" #boardItem>
+				<board-list-item [board]="board" [username]="username" (boardDelete)="boardDeleted($event)"></board-list-item>
+			</li>
+		</ul>
+
+		<h2 class="text-center">Public Boards</h2>
+		<p class="text-center" *ngIf="publicBoards.length == 0">You don't have any public boards</p>
+		<ul class="board-list">
+			<li *ngFor="let board of publicBoards" #boardItem>
 				<board-list-item [board]="board" [username]="username" (boardDelete)="boardDeleted($event)"></board-list-item>
 			</li>
 		</ul>
