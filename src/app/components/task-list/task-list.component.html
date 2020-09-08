@@ -11,7 +11,7 @@
 		</li>
 	</ul>
 
-	<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New task</ui-button>
+	<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New Task</ui-button>
 	<ui-toggable-edit #taskEdit [useTextarea]="true" [placeholder]="'Your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
 
 	<ui-context-menu #listMenu>
