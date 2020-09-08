@@ -31,7 +31,13 @@ export class BoardComponent implements OnInit {
 		this.dragulaService.createGroup("LISTS",
 		{
 			direction: "horizontal",
-			moves: (el, source, handle) => handle.className == "drag-handle"
+			moves: (el, source, handle) =>
+			{
+				if (this.canUserEdit())
+					return handle.className == "drag-handle";
+				else
+					return false;
+			}
 		});
 
 		this.subscriptions.add(
@@ -302,5 +308,20 @@ export class BoardComponent implements OnInit {
 				}
 			});
 		}
+	}
+
+	// if user can edit this board - do they have permission, are authenticated etc.
+	canUserEdit(): boolean
+	{
+		if (this.authService.isAuthenticated())
+		{
+			// currently only owners can edit boards
+			if (this.board.ownerUsername == this.authService.getUsername())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

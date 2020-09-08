@@ -8,7 +8,7 @@
 			</li>
 
 			<!-- new list button -->
-			<li class="task-list add-list">
+			<li class="task-list add-list" *ngIf="canUserEdit()">
 				<ui-button class="btn-add" (click)="showEdit()" [ngClass]="listEdit.isVisible ? 'hidden' : ''"><i class="material-icons add-icon">create</i> New List</ui-button>
 				<ui-toggable-edit #listEdit [placeholder]="'Name for your list'" [(val)]="newListTitle" (acceptClick)="createTaskListFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
 			</li>
@@ -21,5 +21,5 @@
 		</div>
 	</div>
 
-	<task-edit-modal #modal></task-edit-modal>
+	<task-edit-modal #modal [parentBoard]="this"></task-edit-modal>
 </div>

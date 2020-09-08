@@ -15,6 +15,18 @@
 		padding-top: 0;
 	}
 
+	// when user isn't allowed to edit the board
+	&.locked
+	{
+		padding-bottom: 0;
+
+		#header .btn-list-settings
+		{
+			visibility: hidden;
+			pointer-events: none;
+		}
+	}
+
 	ui-button
 	{
 		margin-top: 5px;
@@ -47,6 +59,8 @@
 		.btn-list-settings
 		{
 			text-align: right;
+			margin: 0;
+			margin-top: 1px;
 		}
 	}
 

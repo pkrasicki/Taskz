@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { TaskList } from 'src/app/models/task-list';
 import { Task } from 'src/app/models/task';
 import { TaskService } from "src/app/services/task.service";
 import { ModalComponent } from '../ui/modal/modal.component';
+import { BoardComponent } from '../views/board/board.component';
 
 @Component({
 	selector: 'task-edit-modal',
@@ -11,6 +12,7 @@ import { ModalComponent } from '../ui/modal/modal.component';
 })
 export class TaskEditModalComponent extends ModalComponent implements OnInit{
 	@ViewChild("taskTitleInput", {static: false}) taskTitleInput;
+	@Input("parentBoard") parentBoard: BoardComponent;
 	currentTask: Task;
 	currentTaskList: TaskList;
 	taskContent: string;

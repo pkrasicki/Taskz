@@ -1,18 +1,28 @@
-<div class="task-list" #listElement>
+<div class="task-list" #listElement [ngClass]="parentBoard.canUserEdit() ? '' : 'locked'">
 	<div id="header" class="drag-handle">
 		<h4 *ngIf="!isEditingListTitle">{{ taskList.title }}</h4>
 		<ui-text-input #listTitleInput [(inputValue)]="newListTitle" *ngIf="isEditingListTitle" (blur)="listTitleEditBlurred($event)"></ui-text-input>
 		<ui-button class="btn-list-settings" (click)="settingsBtnClicked($event)"><i class="material-icons">more_horiz</i></ui-button>
 	</div>
 
-	<ul dragula="TASKS" [(dragulaModel)]="taskList.tasks" [attr.data-list-id]="taskList.id">
+	<ul *ngIf="parentBoard.canUserEdit(); else lockedTasks" dragula="TASKS" [(dragulaModel)]="taskList.tasks" [attr.data-list-id]="taskList.id">
 		<li *ngFor="let task of taskList.tasks" id="{{task.id}}">
 			<task [task]="task" [parentTaskList]="this"></task>
 		</li>
 	</ul>
 
-	<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New Task</ui-button>
-	<ui-toggable-edit #taskEdit [useTextarea]="true" [placeholder]="'Your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
+	<ng-template #lockedTasks>
+		<ul>
+			<li *ngFor="let task of taskList.tasks" id="{{task.id}}">
+				<task [task]="task" [parentTaskList]="this"></task>
+			</li>
+		</ul>
+	</ng-template>
+
+	<ng-container *ngIf="parentBoard.canUserEdit()">
+		<ui-button class="btn-add" [ngClass]="taskEdit.isVisible ? 'hidden' : ''" (click)="showEdit()"><i class="material-icons add-icon">create</i> New Task</ui-button>
+		<ui-toggable-edit #taskEdit [useTextarea]="true" [placeholder]="'Your task'" [(val)]="parentBoard.newTaskContent" (acceptClick)="createTaskFromInput()" (cancelClick)="hideEdit()"></ui-toggable-edit>
+	</ng-container>
 
 	<ui-context-menu #listMenu>
 		<li><ui-button class="btn-alt" (click)="duplicate()">Duplicate</ui-button></li>

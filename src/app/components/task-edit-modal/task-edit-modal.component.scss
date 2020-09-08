@@ -64,6 +64,18 @@
 			{
 				color: rgba(255, 255, 255, 0.95);
 			}
+
+			// when user isn't allowed to edit the board
+			&.locked
+			{
+				cursor: default;
+				pointer-events: none;
+
+				.pen-icon
+				{
+					display: none;
+				}
+			}
 		}
 
 		.buttons
