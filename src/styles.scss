@@ -279,6 +279,14 @@ ui-text-input[disabled=true]
 	pointer-events: none;
 }
 
+.taskz
+{
+	color: $primary;
+	font-size: 48px;
+	margin-top: 25px;
+	margin-bottom: 0px;
+}
+
 @keyframes spin
 {
 	from {transform: rotate(0deg);}
