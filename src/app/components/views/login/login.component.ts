@@ -18,6 +18,9 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit()
 	{
+		if (this.authService.isAuthenticated())
+			this.router.navigate(["/boards"]);
+
 		let justLoggedOut = this.route.snapshot.queryParamMap.get("loggedOut");
 		let justRegistered = this.route.snapshot.queryParamMap.get("registered");
 		let isRestrictedUrl = this.route.snapshot.queryParamMap.get("restrictedUrl");

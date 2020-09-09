@@ -14,7 +14,10 @@ export class RegisterComponent implements OnInit {
 	messages: string[] = [];
 	constructor(private authService: AuthService, private router: Router) { }
 
-	ngOnInit() {
+	ngOnInit()
+	{
+		if (this.authService.isAuthenticated())
+			this.router.navigate(["/boards"]);
 	}
 
 	formSubmitted(e)
