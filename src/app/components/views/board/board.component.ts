@@ -78,7 +78,7 @@ export class BoardComponent implements OnInit {
 
 				if (err.status == 404)
 				{
-					this.router.navigate(["/404"], {skipLocationChange: true});
+					this.router.navigate(["/404"], {skipLocationChange: true, queryParams: {isBoard: true}});
 				} else
 				{
 					if (err.status == 401)

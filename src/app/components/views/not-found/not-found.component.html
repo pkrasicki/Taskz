@@ -1,4 +1,8 @@
+<navbar></navbar>
+
 <div class="not-found">
+	<h1 class="taskz text-center">Taskz</h1>
 	<h1 class="title">404</h1>
-	<p>Not found</p>
+	<p *ngIf="isBoard">This board doesn't exist or you don't have permission to view it</p>
+	<p *ngIf="!isBoard">This page doesn't exist</p>
 </div>

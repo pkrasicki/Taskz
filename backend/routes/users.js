@@ -9,10 +9,17 @@ const ErrorResponse = require("../models/error-response");
 const config = require("../config");
 const verify = require("../verify/verify");
 
-function noPermissionResponse(res)
+function notFoundResponse(res)
 {
-	res.status(403);
-	res.json(new ErrorResponse("You don't have permission to edit this board"));
+	res.status(404);
+	res.json(new ErrorResponse("not found"));
+}
+
+function notAuthenticatedResponse(res)
+{
+	res.status(401);
+	res.cookie("isAuthenticated", false);
+	res.json(new ErrorResponse("Not authenticated"));
 }
 
 router.post("/login", passport.authenticate("local", {failWithError: true}), (req, res, next) =>
@@ -144,11 +151,17 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 	} else
 	{
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId == -1)
+		if (boardId == -1) // doesn't exist
 		{
-			res.status(404);
-			res.json(new ErrorResponse("not found"));
-			return;
+			if (isAuthenticated)
+			{
+				notFoundResponse(res);
+				return;
+			} else
+			{
+				notAuthenticatedResponse(res);
+				return;
+			}
 		}
 
 		let board = await User.getCompleteBoard(boardId);
@@ -160,9 +173,7 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 
 		} else if (!isAuthenticated)
 		{
-			res.status(401);
-			res.cookie("isAuthenticated", false);
-			res.json(new ErrorResponse("Not authenticated", {authenticated: false}));
+			notAuthenticatedResponse(res);
 
 		} else
 		{
@@ -174,7 +185,7 @@ router.get("/:username/boards/:boardName", async (req, res) =>
 				res.json(new SuccessResponse(board));
 			} else
 			{
-				noPermissionResponse(res);
+				notFoundResponse(res);
 			}
 		}
 	}
@@ -237,6 +248,7 @@ router.delete("/boards/:id", requireAuthentication, async(req, res) =>
 	{
 		let user = new User(req.user.Name, req.user.UserId)
 		let isOwner = await user.isOwner(id);
+
 		if (isOwner)
 		{
 			let affectedRows = await user.deleteBoard(id);
@@ -248,10 +260,20 @@ router.delete("/boards/:id", requireAuthentication, async(req, res) =>
 				res.status(500);
 				res.json(new ErrorResponse("couldn't delete board"));
 			}
+
 		} else
 		{
-			res.status(403);
-			res.json(new ErrorResponse("you don't own this board"));
+			let hasAccess = await user.hasAccess(boardId);
+			if (hasAccess)
+			{
+				res.status(403);
+				res.json(new ErrorResponse("you don't own this board"));
+
+			} else
+			{
+				notFoundResponse(res);
+				return;
+			}
 		}
 	}
 });
@@ -271,33 +293,36 @@ router.post("/:username/boards/:boardName/taskLists", requireAuthentication, asy
 		title = verify.validListTitle(title);
 
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let result = await user.createTaskList(boardId, title, order, tasks);
+			if (result.insertId > 0)
 			{
-				let result = await user.createTaskList(boardId, title, order, tasks);
-				if (result.insertId > 0)
-				{
-					res.json(new SuccessResponse({
-						id: result.uuid,
-						title: title,
-						order: order,
-						tasks: tasks || []
-					}));
+				res.json(new SuccessResponse({
+					id: result.uuid,
+					title: title,
+					order: order,
+					tasks: tasks || []
+				}));
 
-				} else
-				{
-					console.log("Error creating task list");
-					res.status(500);
-					res.json(new ErrorResponse("server error"));
-				}
 			} else
 			{
-				noPermissionResponse(res);
+				console.log("Error creating task list");
+				res.status(500);
+				res.json(new ErrorResponse("server error"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
@@ -317,26 +342,29 @@ router.put("/:username/boards/:boardName/taskLists/:id", requireAuthentication, 
 		title = verify.validListTitle(title);
 
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let changedRows = await user.updateTaskList(id, title, order);
+			if (changedRows > 0)
 			{
-				let changedRows = await user.updateTaskList(id, title, order);
-				if (changedRows > 0)
-				{
-					res.json(new SuccessResponse({id: id, title: title, order: order}));
-				} else
-				{
-					res.status(500);
-					res.json(new ErrorResponse("task list couldn't be updated"));
-				}
+				res.json(new SuccessResponse({id: id, title: title, order: order}));
 			} else
 			{
-				noPermissionResponse(res);
+				res.status(500);
+				res.json(new ErrorResponse("task list couldn't be updated"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
@@ -353,26 +381,29 @@ router.delete("/:username/boards/:boardName/taskLists/:id", requireAuthenticatio
 	} else
 	{
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let affectedRows = await user.deleteTaskList(id);
+			if (affectedRows > 0)
 			{
-				let affectedRows = await user.deleteTaskList(id);
-				if (affectedRows > 0)
-				{
-					res.json(new SuccessResponse({id}));
-				} else
-				{
-					res.status(500);
-					res.json(new ErrorResponse("task list couldn't be deleted"));
-				}
+				res.json(new SuccessResponse({id}));
 			} else
 			{
-				noPermissionResponse(res);
+				res.status(500);
+				res.json(new ErrorResponse("task list couldn't be deleted"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
@@ -392,29 +423,32 @@ router.post("/:username/boards/:boardName/taskLists/:id", requireAuthentication,
 		content = verify.validTaskContent(content);
 
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let result = await user.createTaskUuid(id, content, order, dueDate);
+
+			if (result.insertId > 0)
 			{
-				let result = await user.createTaskUuid(id, content, order, dueDate);
+				res.json(new SuccessResponse({id: result.uuid, content: content, order: order, dueDate: dueDate}));
 
-				if (result.insertId > 0)
-				{
-					res.json(new SuccessResponse({id: result.uuid, content: content, order: order, dueDate: dueDate}));
-
-				} else
-				{
-					console.log("Error creating task");
-					res.status(500);
-					res.json(new ErrorResponse("server error"));
-				}
 			} else
 			{
-				noPermissionResponse(res);
+				console.log("Error creating task");
+				res.status(500);
+				res.json(new ErrorResponse("server error"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
@@ -434,26 +468,29 @@ router.put("/:username/boards/:boardName/tasks/:id", requireAuthentication, asyn
 		content = verify.validTaskContent(content);
 
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let changedRows = await user.updateTask(id, content, order, dueDate);
+			if (changedRows > 0)
 			{
-				let changedRows = await user.updateTask(id, content, order, dueDate);
-				if (changedRows > 0)
-				{
-					res.json(new SuccessResponse({id: id, content: content, order: order, dueDate: dueDate}));
-				} else
-				{
-					res.status(500);
-					res.json(new ErrorResponse("task couldn't be updated"));
-				}
+				res.json(new SuccessResponse({id: id, content: content, order: order, dueDate: dueDate}));
 			} else
 			{
-				noPermissionResponse(res);
+				res.status(500);
+				res.json(new ErrorResponse("task couldn't be updated"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
@@ -470,26 +507,29 @@ router.delete("/:username/boards/:boardName/tasks/:id", requireAuthentication, a
 	} else
 	{
 		let boardId = await User.getBoardId(username, boardName);
-		if (boardId != -1)
+		if (boardId == -1)
 		{
-			let user = new User(req.user.Name, req.user.UserId);
-			let hasAccess = await user.hasAccess(boardId);
+			notFoundResponse(res);
+			return;
+		}
 
-			if (hasAccess)
+		let user = new User(req.user.Name, req.user.UserId);
+		let hasAccess = await user.hasAccess(boardId);
+
+		if (hasAccess)
+		{
+			let affectedRows = await user.deleteTask(id);
+			if (affectedRows > 0)
 			{
-				let affectedRows = await user.deleteTask(id);
-				if (affectedRows > 0)
-				{
-					res.json(new SuccessResponse({id: id}));
-				} else
-				{
-					res.status(500);
-					res.json(new ErrorResponse("task couldn't be deleted"));
-				}
+				res.json(new SuccessResponse({id: id}));
 			} else
 			{
-				noPermissionResponse(res);
+				res.status(500);
+				res.json(new ErrorResponse("task couldn't be deleted"));
 			}
+		} else
+		{
+			notFoundResponse(res);
 		}
 	}
 });
