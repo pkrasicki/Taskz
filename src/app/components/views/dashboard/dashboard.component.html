@@ -1,5 +1,5 @@
 <div class="dashboard">
-	<navbar (createBoardClick)="createBoardClicked($event)"></navbar>
+	<navbar [isDashboard]="true" (createBoardClick)="createBoardClicked($event)"></navbar>
 
 	<div class="container">
 		<h2 class="text-center">Private Boards</h2>

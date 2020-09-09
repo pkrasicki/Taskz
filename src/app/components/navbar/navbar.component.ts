@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 	@Input("board") board: Board;
+	@Input("isDashboard") isDashboard: boolean = false;
 	@ViewChild("userMenu", {static: false}) userMenu;
 	@ViewChild("profileBtn", {static: false}) profileBtn;
 	@Output() createBoardClick: EventEmitter<any> = new EventEmitter();
@@ -52,5 +53,13 @@ export class NavbarComponent implements OnInit {
 	isAuthenticated(): boolean
 	{
 		return this.authService.isAuthenticated();
+	}
+
+	isBoardOwner(): boolean
+	{
+		if (this.isAuthenticated() && this.getUsername() == this.board.ownerUsername)
+			return true;
+		else
+			return false;
 	}
 }
