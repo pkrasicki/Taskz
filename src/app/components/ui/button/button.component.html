@@ -1,1 +1,1 @@
-<a [routerLink]="link" [queryParams]="params" draggable="false" #btn (click)="$event.preventDefault();" (dragstart)="false;"><ng-content></ng-content></a>
+<span class="ui-button"><a [ngStyle]="{'pointer-events': link == null ? 'none' : 'default'}" [routerLink]="link" [queryParams]="params" draggable="false" #btn (click)="$event.preventDefault();" (dragstart)="false;"><ng-content></ng-content></a></span>

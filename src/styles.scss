@@ -34,6 +34,11 @@ a
 	{
 		outline: none;
 	}
+
+	&:hover
+	{
+		color: $link-light;
+	}
 }
 
 input, textarea
