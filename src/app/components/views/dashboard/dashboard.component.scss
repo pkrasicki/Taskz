@@ -5,10 +5,13 @@
 	background: $background;
 	height: 100%;
 	overflow: auto;
+	display: flex;
+	flex-direction: column;
 
 	.container
 	{
 		padding: 10px;
+		flex: 1;
 	}
 
 	.board-list

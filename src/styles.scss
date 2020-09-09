@@ -292,6 +292,21 @@ ui-text-input[disabled=true]
 	margin-bottom: 0px;
 }
 
+.loading-indicator
+{
+	text-align: center;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	align-items: center;
+
+	.spinner
+	{
+		font-size: 100px;
+		color: rgba(255, 255, 255, 0.15);
+	}
+}
+
 @keyframes spin
 {
 	from {transform: rotate(0deg);}

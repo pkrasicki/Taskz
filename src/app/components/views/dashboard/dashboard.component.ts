@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit {
 	newBoardColor: string = DEFAULT_BOARD_COLOR;
 	colorMenuExpanded: boolean = false;
 	boardNameIncorrect: boolean = false;
+	isLoading: boolean = true;
 
 	constructor(private taskService: TaskService, private authService: AuthService, private router: Router) { }
 
@@ -44,8 +45,12 @@ export class DashboardComponent implements OnInit {
 						this.publicBoards.push(boardObj);
 				});
 
+				this.isLoading = false;
+
 			}, error: (err) =>
 			{
+				this.isLoading = false;
+
 				if (err.status == 401)
 					this.router.navigate(["/login"], {queryParams: {restrictedUrl: true}});
 				else

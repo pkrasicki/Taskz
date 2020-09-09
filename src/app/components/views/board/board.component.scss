@@ -28,19 +28,4 @@
 		height: 100%;
 		align-items: flex-start;
 	}
-
-	.loading-indicator
-	{
-		text-align: center;
-		height: 100%;
-		display: grid;
-		grid-template-columns: 1fr;
-		align-items: center;
-
-		.spinner
-		{
-			font-size: 100px;
-			color: rgba(255, 255, 255, 0.15);
-		}
-	}
 }
