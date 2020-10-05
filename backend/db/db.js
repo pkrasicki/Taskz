@@ -283,7 +283,22 @@ module.exports =
 	{
 		return new Promise(resolve =>
 		{
-			let queryString = "SELECT B.Name as title, B.Type as type, B.Color FROM Boards as B WHERE AdminId = ?;";
+			let queryString = "SELECT B.Name as title, B.Type as type, B.Color as color FROM Boards as B WHERE AdminId = ?;";
+			con.query(queryString, [userId], (error, results) =>
+			{
+				if (error)
+					throw error;
+
+				resolve(results);
+			});
+		});
+	},
+
+	getPublicBoards(userId)
+	{
+		return new Promise(resolve =>
+		{
+			let queryString = "SELECT B.Name as title, B.Color as color FROM Boards as B WHERE AdminId = ? AND B.Type = 1;";
 			con.query(queryString, [userId], (error, results) =>
 			{
 				if (error)

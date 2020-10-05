@@ -1,0 +1,42 @@
+.profile
+{
+	.container
+	{
+		padding: 10px;
+
+		.profile-info
+		{
+			display: flex;
+			flex-direction: row;
+			margin-bottom: 100px;
+
+			.avatar-placeholder
+			{
+				font-size: 128px;
+			}
+
+			.username
+			{
+				margin-bottom: 10px;
+			}
+
+			.join-date
+			{
+				color: rgba(255, 255, 255, 0.6);
+				margin-top: 0px;
+			}
+		}
+	}
+
+	.board-list
+	{
+		padding: 5px;
+
+		li
+		{
+			display: inline-block;
+			margin-right: 25px;
+			margin-bottom: 25px;
+		}
+	}
+}

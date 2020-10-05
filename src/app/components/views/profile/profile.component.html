@@ -1,0 +1,25 @@
+<div class="profile">
+	<navbar></navbar>
+
+	<div class="container">
+		<div class="profile-info">
+			<i class="material-icons avatar-placeholder">person</i>
+			<div>
+				<h2 class="username">{{ profile.name }}</h2>
+				<p class="join-date">Joined: {{ profile.created | date }}</p>
+			</div>
+		</div>
+
+		<h2 class="text-center">Public Boards</h2>
+
+		<ng-template [ngIf]="profile.publicBoards != null && profile.publicBoards.length == 0">
+			<p class="text-center">This user doesn't have any public boards</p>
+		</ng-template>
+
+		<ul class="board-list">
+			<li *ngFor="let board of profile.publicBoards">
+				<board-list-item [board]="board" [username]="profile.name" [hideDeleteBtn]="true"></board-list-item>
+			</li>
+		</ul>
+	</div>
+</div>

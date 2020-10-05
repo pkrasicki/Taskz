@@ -63,4 +63,9 @@ export class AuthService {
 	{
 		return this.getCookie("isAuthenticated") == "true";
 	}
+
+	getUserProfile(username): Observable<any>
+	{
+		return this.http.get<any>(`/users/${username}`);
+	}
 }

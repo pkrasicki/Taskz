@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
 			next: (res) =>
 			{
 				let destinationUrl = this.route.snapshot.queryParamMap.get("url");
-				if (destinationUrl != null && destinationUrl != "")
+				if (destinationUrl != null && destinationUrl != "" && destinationUrl != "/404")
 					this.router.navigate([destinationUrl]);
 				else
 					this.router.navigate(["/boards"]);

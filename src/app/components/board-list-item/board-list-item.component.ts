@@ -10,6 +10,7 @@ import { Board } from 'src/app/models/board';
 export class BoardListItemComponent implements OnInit {
 	@Input("board") board: Board;
 	@Input("username") username: string;
+	@Input("hideDeleteBtn") hideDeleteBtn: boolean = false;
 	@Output("boardDelete") boardDelete: EventEmitter<{id: string, type: number}> = new EventEmitter<{id: string, type: number}>();
 	constructor(private taskService: TaskService) { }
 

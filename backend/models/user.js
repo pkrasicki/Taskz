@@ -242,6 +242,12 @@ class User
 		return boards;
 	}
 
+	async getPublicBoards()
+	{
+		let boards = await db.getPublicBoards(this.id);
+		return boards;
+	}
+
 	async getBoards()
 	{
 		let boards = await db.getBoards(this.id);

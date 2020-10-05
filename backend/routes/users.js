@@ -263,7 +263,7 @@ router.delete("/boards/:id", requireAuthentication, async(req, res) =>
 
 		} else
 		{
-			let hasAccess = await user.hasAccess(boardId);
+			let hasAccess = await user.hasAccess(id);
 			if (hasAccess)
 			{
 				res.status(403);
@@ -531,6 +531,41 @@ router.delete("/:username/boards/:boardName/tasks/:id", requireAuthentication, a
 		{
 			notFoundResponse(res);
 		}
+	}
+});
+
+// get user profile
+router.get("/:username", async (req, res) =>
+{
+	const {username} = req.params;
+
+	if (username == null)
+	{
+		res.status(400);
+		res.json(new ErrorResponse("missing parameter"));
+
+	} else
+	{
+		const userData = await User.getByName(username);
+		if (userData == null)
+		{
+			notFoundResponse(res);
+			return;
+		}
+
+		let name = userData.Name;
+		let createdDate = userData.CreatedDate;
+		let user = new User(userData.Name, userData.UserId);
+		let publicBoards = await user.getPublicBoards();
+
+		let profile =
+		{
+			name: name,
+			created: createdDate,
+			publicBoards: publicBoards
+		};
+
+		res.json(new SuccessResponse(profile));
 	}
 });
 

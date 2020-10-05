@@ -23,6 +23,7 @@ import { BoardListItemComponent } from './components/board-list-item/board-list-
 import { TextareaComponent } from './components/ui/textarea/textarea.component';
 import { DragulaModule } from "ng2-dragula";
 import { NotFoundComponent } from './components/views/not-found/not-found.component';
+import { ProfileComponent } from './components/views/profile/profile.component';
 
 @NgModule({
 	declarations: [
@@ -43,7 +44,8 @@ import { NotFoundComponent } from './components/views/not-found/not-found.compon
 	  ModalComponent,
 	  BoardListItemComponent,
 	  TextareaComponent,
-	  NotFoundComponent
+	  NotFoundComponent,
+	  ProfileComponent
 	],
 	imports: [
 	  BrowserModule,

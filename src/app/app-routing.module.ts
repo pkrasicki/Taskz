@@ -6,6 +6,7 @@ import { WelcomeComponent } from './components/views/welcome/welcome.component';
 import { LoginComponent } from './components/views/login/login.component';
 import { RegisterComponent } from './components/views/register/register.component';
 import { NotFoundComponent } from './components/views/not-found/not-found.component';
+import { ProfileComponent } from './components/views/profile/profile.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,8 @@ const routes: Routes = [
 	{ path: "login", component: LoginComponent },
 	{ path: "register", component: RegisterComponent },
 	{ path: "boards", component: DashboardComponent },
+	{ path: "404", component: NotFoundComponent },
+	{ path: ":username", component: ProfileComponent },
 	{ path: ":username/:boardName", component: BoardComponent },
 	{ path: "**" , component: NotFoundComponent }
 ];

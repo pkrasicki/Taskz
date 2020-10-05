@@ -16,7 +16,7 @@
 			<ui-button class="btn-nav" #profileBtn (click)="userMenuClicked($event)"><i class="material-icons add-icon">person</i> {{ getUsername() }}</ui-button>
 
 			<ui-context-menu #userMenu>
-				<li><ui-button disabled="true" class="btn-nav">Profile</ui-button></li>
+				<li><ui-button class="btn-nav" [link]="'/' + getUsername()">Profile</ui-button></li>
 				<li><ui-button disabled="true" class="btn-nav">Account Settings</ui-button></li>
 				<li><ui-button class="btn-nav" (click)="logout()">Logout</ui-button></li>
 			</ui-context-menu>
