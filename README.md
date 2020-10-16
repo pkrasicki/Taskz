@@ -3,14 +3,13 @@ Free and open source task management app.
 
 ![screenshot](screenshot.png?raw=true)
 
+![screenshot 2](screenshot2.png?raw=true)
+
 ## Dependencies
 - [Node.js](https://nodejs.org)
 - [Npm](https://npmjs.com)
 - [Redis](https://redis.io)
 - [MySQL](https://mysql.com) or [MariaDB](https://mariadb.org)
-
-## Install with Npm
-`npm install taskz-app`
 
 ## Build from source
 Install remaining dependencies:
