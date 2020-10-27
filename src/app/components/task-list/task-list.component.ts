@@ -12,10 +12,10 @@ import { TaskComponent } from '../task/task.component';
 export class TaskListComponent implements OnInit {
 	@Input() taskList: TaskList;
 	@Input() parentBoard;
-	@ViewChild("listElement", {static: false}) element;
-	@ViewChild("taskEdit", {static: false}) taskEdit;
-	@ViewChild("listMenu", {static: false}) listMenu;
-	@ViewChild("listTitleInput", {static: false}) listTitleInput;
+	@ViewChild("listElement") element;
+	@ViewChild("taskEdit") taskEdit;
+	@ViewChild("listMenu") listMenu;
+	@ViewChild("listTitleInput") listTitleInput;
 	@ViewChildren(TaskComponent) taskComponents;
 	isEditingListTitle: boolean = false;
 	newListTitle: string;

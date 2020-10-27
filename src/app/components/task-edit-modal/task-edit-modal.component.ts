@@ -11,7 +11,7 @@ import { BoardComponent } from '../views/board/board.component';
 	styleUrls: ['./task-edit-modal.component.scss']
 })
 export class TaskEditModalComponent extends ModalComponent implements OnInit{
-	@ViewChild("taskTitleInput", {static: false}) taskTitleInput;
+	@ViewChild("taskTitleInput") taskTitleInput;
 	@Input("parentBoard") parentBoard: BoardComponent;
 	currentTask: Task;
 	currentTaskList: TaskList;

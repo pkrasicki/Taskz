@@ -6,7 +6,7 @@ import { Component, OnInit, ViewChild, HostListener, EventEmitter, Output } from
 	styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent implements OnInit {
-	@ViewChild("contextMenu", {static: false}) element;
+	@ViewChild("contextMenu") element;
 	@Output("hide") hideEvent: EventEmitter<any> = new EventEmitter();
 	isVisible: boolean = false;
 	isOnScreen: boolean = false;

@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 	@Input("board") board: Board;
 	@Input("isDashboard") isDashboard: boolean = false;
-	@ViewChild("userMenu", {static: false}) userMenu;
-	@ViewChild("profileBtn", {static: false}) profileBtn;
+	@ViewChild("userMenu") userMenu;
+	@ViewChild("profileBtn") profileBtn;
 	@Output() createBoardClick: EventEmitter<any> = new EventEmitter();
 	currentUrl: string;
 

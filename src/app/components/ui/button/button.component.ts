@@ -6,7 +6,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 	styleUrls: ['./button.component.scss']
 })
 export class ButtonComponent implements OnInit {
-	@ViewChild("btn", {static: false}) element;
+	@ViewChild("btn") element;
 	@Input("link") link: string;
 	@Input("params") params: any = {};
 	constructor() { }

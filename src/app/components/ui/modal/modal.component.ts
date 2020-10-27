@@ -6,8 +6,8 @@ import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 	styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
-	@ViewChild("taskTitleInput", {static: false}) taskTitleInput;
-	@ViewChild("outsideArea", {static: false}) outsideArea;
+	@ViewChild("taskTitleInput") taskTitleInput;
+	@ViewChild("outsideArea") outsideArea;
 	isVisible: boolean = false;
 
 	constructor() { }

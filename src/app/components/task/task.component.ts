@@ -9,7 +9,7 @@ import { Task } from "../../models/task";
 export class TaskComponent implements OnInit {
 	@Input() task: Task;
 	@Input() parentTaskList;
-	@ViewChild("taskElement", {static: false}) element;
+	@ViewChild("taskElement") element;
 
 	constructor() { }
 

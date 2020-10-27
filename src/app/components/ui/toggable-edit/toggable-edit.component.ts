@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, HostListener
 })
 export class ToggableEditComponent implements OnInit {
 	@ViewChild("toggableEdit", {static: true}) element;
-	@ViewChild("input", {static: false}) input;
+	@ViewChild("input") input;
 	@Input() placeholder: string;
 	@Input() val: string;
 	@Input() useTextarea: boolean = false;

@@ -17,8 +17,8 @@ import { AuthService } from 'src/app/services/auth.service';
 	styleUrls: ['./board.component.scss']
 })
 export class BoardComponent implements OnInit {
-	@ViewChild("modal", {static: false}) modal: TaskEditModalComponent;
-	@ViewChild("listEdit", {static: false}) listEdit: ToggableEditComponent;
+	@ViewChild("modal") modal: TaskEditModalComponent;
+	@ViewChild("listEdit") listEdit: ToggableEditComponent;
 	@ViewChildren(TaskListComponent) taskListComponents;
 	isLoading: boolean = true;
 	board: Board;

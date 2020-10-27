@@ -12,10 +12,10 @@ const DEFAULT_BOARD_COLOR: string = "#4097c0";
 	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-	@ViewChild("createBoardMenu", {static: false}) createBoardMenu;
-	@ViewChild("createBtn", {static: false}) createBtn;
+	@ViewChild("createBoardMenu") createBoardMenu;
+	@ViewChild("createBtn") createBtn;
 	@ViewChildren("boardItem") boardItems;
-	@ViewChild("newBoardNameInput", {static: false}) newBoardNameInput;
+	@ViewChild("newBoardNameInput") newBoardNameInput;
 	username: string;
 	privateBoards: Board[] = [];
 	publicBoards: Board[] = [];
