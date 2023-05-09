@@ -6,7 +6,9 @@ const con = mysql.createConnection({
 	host: config.database.host,
 	user: config.database.user,
 	password: config.database.password,
-	database: config.database.dbName
+	database: config.database.dbName,
+	port: config.database.port,
+	charset: config.database.charset
 });
 
 function handleQueryError(error, results, fields)

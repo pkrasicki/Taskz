@@ -11,7 +11,9 @@ const config =
 		host: "",
 		user: "",
 		password: "",
-		dbName: ""
+		dbName: "",
+		port: 3306,
+		charset: "utf8mb4"
 	},
 
 	redis:
